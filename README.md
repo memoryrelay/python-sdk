@@ -9,11 +9,13 @@ Official Python client for [MemoryRelay](https://memoryrelay.io) - persistent me
 ## Features
 
 - 🚀 **Simple API** - Intuitive Pythonic interface
+- ⚡ **Async/Await Support** - Full async client for high-performance applications
 - 🔍 **Semantic Search** - Vector-based memory retrieval
-- ⚡ **Batch Operations** - Create multiple memories efficiently
+- 📦 **Batch Operations** - Create multiple memories efficiently
 - 🏷️ **Entity Tracking** - Automatic relationship management
 - 🔐 **Type Safe** - Full Pydantic models and type hints
 - 🐍 **Python 3.9+** - Modern Python support
+- ✅ **Production Tested** - Verified against live API
 
 ## Installation
 
@@ -22,6 +24,8 @@ pip install memoryrelay
 ```
 
 ## Quick Start
+
+### Sync Client
 
 ```python
 from memoryrelay import MemoryRelay
@@ -46,9 +50,38 @@ for result in results:
     print(f"Content: {result.memory.content}")
 ```
 
+### Async Client
+
+```python
+import asyncio
+from memoryrelay import AsyncMemoryRelay
+
+async def main():
+    async with AsyncMemoryRelay(api_key="mem_your_api_key_here") as client:
+        # Create a memory
+        memory = await client.memories.create(
+            content="User prefers dark mode",
+            agent_id="my-agent"
+        )
+        
+        # Search memories
+        results = await client.memories.search(
+            query="user preferences",
+            limit=5
+        )
+        
+        for result in results:
+            print(f"Score: {result.score:.3f}")
+            print(f"Content: {result.memory.content}")
+
+asyncio.run(main())
+```
+
 ## Usage
 
 ### Initialize Client
+
+#### Sync Client
 
 ```python
 from memoryrelay import MemoryRelay
@@ -70,7 +103,23 @@ with MemoryRelay(api_key="mem_...") as client:
     pass
 ```
 
+#### Async Client
+
+```python
+from memoryrelay import AsyncMemoryRelay
+
+# Basic initialization
+client = AsyncMemoryRelay(api_key="mem_your_api_key_here")
+
+# Use async context manager (recommended)
+async with AsyncMemoryRelay(api_key="mem_...") as client:
+    # Your async code here
+    memory = await client.memories.create(...)
+```
+
 ### Create Memories
+
+#### Sync
 
 ```python
 # Create a single memory
@@ -82,6 +131,27 @@ memory = client.memories.create(
 
 # Batch create (faster for multiple memories)
 response = client.memories.create_batch([
+    {"content": "Memory 1", "agent_id": "agent-1"},
+    {"content": "Memory 2", "agent_id": "agent-1"},
+    {"content": "Memory 3", "agent_id": "agent-1"}
+])
+
+print(f"Created {response.succeeded}/{response.total} memories")
+print(f"Took {response.timing['total_ms']:.0f}ms")
+```
+
+#### Async
+
+```python
+# Create a single memory
+memory = await client.memories.create(
+    content="User completed Python tutorial",
+    agent_id="learning-agent",
+    metadata={"course": "python-101", "completed": True}
+)
+
+# Batch create (faster for multiple memories)
+response = await client.memories.create_batch([
     {"content": "Memory 1", "agent_id": "agent-1"},
     {"content": "Memory 2", "agent_id": "agent-1"},
     {"content": "Memory 3", "agent_id": "agent-1"}
@@ -205,8 +275,9 @@ except APIError as e:
 
 See the [examples/](./examples/) directory for more usage examples:
 
-- [basic_usage.py](./examples/basic_usage.py) - Basic CRUD operations
+- [basic_usage.py](./examples/basic_usage.py) - Sync client CRUD operations
 - [context_manager.py](./examples/context_manager.py) - Using context managers
+- [async_usage.py](./examples/async_usage.py) - Async/await operations
 
 ## Development
 
