@@ -8,16 +8,12 @@ from memoryrelay import MemoryRelay
 with MemoryRelay(api_key="mem_your_api_key_here") as client:
     # Create memories
     memory = client.memories.create(
-        content="Important project deadline coming up",
-        agent_id="task-agent"
+        content="Important project deadline coming up", agent_id="task-agent"
     )
-    
+
     # Search
-    results = client.memories.search(
-        query="deadlines",
-        agent_id="task-agent"
-    )
-    
+    results = client.memories.search(query="deadlines", agent_id="task-agent")
+
     print(f"Found {len(results)} memories about deadlines")
-    
+
     # Client will automatically close when exiting context

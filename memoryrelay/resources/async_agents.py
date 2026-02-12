@@ -8,6 +8,6 @@ if TYPE_CHECKING:
 
 class AsyncAgentsResource:
     """Async Agents API resource (placeholder)."""
-    
+
     def __init__(self, client: "AsyncMemoryRelay") -> None:
         self._client = client
