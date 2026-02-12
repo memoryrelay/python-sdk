@@ -4,7 +4,9 @@ MemoryRelay Python SDK - Main Client
 Official Python client for MemoryRelay API.
 """
 
-from typing import Any, Dict, List, Optional
+import logging
+import time
+from typing import Any, Dict, List, Optional, Union
 
 import httpx
 
@@ -21,6 +23,8 @@ from memoryrelay.resources.memories import MemoriesResource
 from memoryrelay.resources.entities import EntitiesResource
 from memoryrelay.resources.agents import AgentsResource
 from memoryrelay.types import HealthStatus
+
+logger = logging.getLogger("memoryrelay")
 
 
 class MemoryRelay:
@@ -72,13 +76,25 @@ class MemoryRelay:
         self.timeout = timeout
         self.max_retries = max_retries
         
+        logger.debug(
+            f"Initializing MemoryRelay client: base_url={self.base_url}, "
+            f"timeout={timeout}s, max_retries={max_retries}"
+        )
+        
+        # Import version dynamically to avoid circular imports
+        try:
+            from memoryrelay import __version__
+            user_agent = f"memoryrelay-python/{__version__}"
+        except ImportError:
+            user_agent = "memoryrelay-python/0.1.0"
+        
         # Create HTTP client
         self._client = httpx.Client(
             base_url=self.base_url,
             timeout=timeout,
             headers={
                 "X-API-Key": api_key,
-                "User-Agent": f"memoryrelay-python/0.1.0",
+                "User-Agent": user_agent,
             },
             **kwargs,
         )
@@ -111,7 +127,7 @@ class MemoryRelay:
         json: Optional[Dict[str, Any]] = None,
         params: Optional[Dict[str, Any]] = None,
         headers: Optional[Dict[str, str]] = None,
-    ) -> Any:
+    ) -> Union[Dict[str, Any], List[Any], None]:
         """
         Make an HTTP request to the API.
         
@@ -123,7 +139,7 @@ class MemoryRelay:
             headers: Additional headers
             
         Returns:
-            Parsed JSON response
+            Parsed JSON response (dict, list, or None for 204)
             
         Raises:
             AuthenticationError: Invalid API key
@@ -139,16 +155,25 @@ class MemoryRelay:
         if headers:
             req_headers.update(headers)
         
-        # Retry logic
+        # Retry logic with exponential backoff
         last_exception = None
         for attempt in range(self.max_retries):
             try:
+                logger.debug(
+                    f"{method} {path} (attempt {attempt + 1}/{self.max_retries})"
+                )
+                
                 response = self._client.request(
                     method=method,
                     url=path,
                     json=json,
                     params=params,
                     headers=req_headers,
+                )
+                
+                logger.debug(
+                    f"Response: {response.status_code} "
+                    f"({response.elapsed.total_seconds():.3f}s)"
                 )
                 
                 # Handle errors
@@ -162,22 +187,48 @@ class MemoryRelay:
                 return response.json()
                 
             except httpx.TimeoutException as e:
+                logger.warning(f"Request timeout: {e}")
                 last_exception = TimeoutError(f"Request timeout after {self.timeout}s")
                 if attempt == self.max_retries - 1:
                     raise last_exception from e
+                # Exponential backoff
+                time.sleep(2 ** attempt)
                     
             except httpx.NetworkError as e:
+                logger.warning(f"Network error: {e}")
                 last_exception = NetworkError(f"Network error: {str(e)}")
                 if attempt == self.max_retries - 1:
                     raise last_exception from e
+                # Exponential backoff
+                time.sleep(2 ** attempt)
+                    
+            except RateLimitError as e:
+                logger.warning(
+                    f"Rate limited: {e.message} "
+                    f"(retry_after={e.retry_after}s)"
+                )
+                # Don't retry on last attempt
+                if attempt == self.max_retries - 1:
+                    raise
+                # Respect Retry-After header
+                wait_time = e.retry_after if e.retry_after else (2 ** attempt)
+                logger.debug(f"Waiting {wait_time}s before retry...")
+                time.sleep(wait_time)
                     
             except httpx.HTTPStatusError as e:
                 # Don't retry client errors (4xx) except 429
                 if 400 <= e.response.status_code < 500 and e.response.status_code != 429:
                     self._handle_error(e.response)
+                
+                logger.warning(f"HTTP error: {e.response.status_code}")
                 last_exception = e
+                
+                # Don't retry on last attempt
                 if attempt == self.max_retries - 1:
                     self._handle_error(e.response)
+                
+                # Exponential backoff for 5xx errors
+                time.sleep(2 ** attempt)
         
         # Should never reach here, but just in case
         if last_exception:
@@ -185,6 +236,8 @@ class MemoryRelay:
     
     def _handle_error(self, response: httpx.Response) -> None:
         """Handle error responses from API."""
+        error_data: Optional[Dict[str, Any]] = None
+        
         try:
             error_data = response.json()
             error_msg = error_data.get("error", {}).get("message", "Unknown error")
@@ -198,14 +251,14 @@ class MemoryRelay:
             raise AuthenticationError(
                 error_msg,
                 status_code=401,
-                response=error_data if 'error_data' in locals() else None,
+                response=error_data,
                 request_id=request_id,
             )
         elif response.status_code == 404:
             raise NotFoundError(
                 error_msg,
                 status_code=404,
-                response=error_data if 'error_data' in locals() else None,
+                response=error_data,
                 request_id=request_id,
             )
         elif response.status_code == 429:
@@ -219,14 +272,14 @@ class MemoryRelay:
             raise ValidationError(
                 error_msg,
                 status_code=response.status_code,
-                response=error_data if 'error_data' in locals() else None,
+                response=error_data,
                 request_id=request_id,
             )
         else:
             raise APIError(
                 error_msg,
                 status_code=response.status_code,
-                response=error_data if 'error_data' in locals() else None,
+                response=error_data,
                 request_id=request_id,
             )
     

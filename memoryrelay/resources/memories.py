@@ -4,6 +4,7 @@ Memories resource - CRUD operations for memories.
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
+from memoryrelay.exceptions import ValidationError
 from memoryrelay.types import (
     BatchMemoryItem,
     BatchMemoryResponse,
@@ -40,6 +41,9 @@ class MemoriesResource:
         Returns:
             Created Memory object
             
+        Raises:
+            ValidationError: Invalid input (empty content, too long, etc.)
+            
         Example:
             >>> memory = client.memories.create(
             ...     content="User prefers dark mode",
@@ -47,6 +51,19 @@ class MemoriesResource:
             ...     metadata={"category": "preference"}
             ... )
         """
+        # Validate input
+        if not content or not content.strip():
+            raise ValidationError("content cannot be empty", status_code=400)
+        
+        if len(content) > 50000:
+            raise ValidationError(
+                f"content exceeds maximum length of 50,000 characters (got {len(content)})",
+                status_code=400,
+            )
+        
+        if not agent_id or not agent_id.strip():
+            raise ValidationError("agent_id cannot be empty", status_code=400)
+        
         response = self._client._request(
             "POST",
             "/v1/memories",
@@ -91,7 +108,21 @@ class MemoriesResource:
             
         Returns:
             Updated Memory object
+            
+        Raises:
+            ValidationError: Invalid input
         """
+        # Validate input if provided
+        if content is not None:
+            if not content.strip():
+                raise ValidationError("content cannot be empty", status_code=400)
+            
+            if len(content) > 50000:
+                raise ValidationError(
+                    f"content exceeds maximum length of 50,000 characters (got {len(content)})",
+                    status_code=400,
+                )
+        
         response = self._client._request(
             "PUT",
             f"/v1/memories/{memory_id}",
