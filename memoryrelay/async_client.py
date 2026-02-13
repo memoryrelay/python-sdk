@@ -118,6 +118,7 @@ class AsyncMemoryRelay:
             >>> print(health.services)  # {"database": "up", ...}
         """
         response = await self._request("GET", "/v1/health")
+        assert isinstance(response, dict)
         return HealthStatus(**response)
 
     async def _request(

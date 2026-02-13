@@ -91,6 +91,7 @@ class MemoriesResource:
             NotFoundError: Memory not found
         """
         response = self._client._request("GET", f"/v1/memories/{memory_id}")
+        assert isinstance(response, dict)
         return Memory(**response)
 
     def update(
@@ -166,6 +167,7 @@ class MemoriesResource:
             params["user_id"] = user_id
 
         response = self._client._request("GET", "/v1/memories", params=params)
+        assert isinstance(response, dict)
         return [Memory(**item) for item in response.get("data", [])]
 
     def search(

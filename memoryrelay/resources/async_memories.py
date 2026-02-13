@@ -91,6 +91,7 @@ class AsyncMemoriesResource:
             NotFoundError: Memory not found
         """
         response = await self._client._request("GET", f"/v1/memories/{memory_id}")
+        assert isinstance(response, dict)
         return Memory(**response)
 
     async def update(
@@ -166,6 +167,7 @@ class AsyncMemoriesResource:
             params["user_id"] = user_id
 
         response = await self._client._request("GET", "/v1/memories", params=params)
+        assert isinstance(response, dict)
         return [Memory(**item) for item in response.get("data", [])]
 
     async def search(

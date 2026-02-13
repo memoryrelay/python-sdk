@@ -118,6 +118,7 @@ class MemoryRelay:
             >>> print(health.services)  # {"database": "up", ...}
         """
         response = self._request("GET", "/v1/health")
+        assert isinstance(response, dict)
         return HealthStatus(**response)
 
     def _request(

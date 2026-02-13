@@ -58,6 +58,7 @@ class EntitiesResource:
             Entity object
         """
         response = self._client._request("GET", f"/v1/entities/{entity_id}")
+        assert isinstance(response, dict)
         return Entity(**response)
 
     def list(
@@ -86,6 +87,7 @@ class EntitiesResource:
             params["entity_type"] = entity_type
 
         response = self._client._request("GET", "/v1/entities", params=params)
+        assert isinstance(response, dict)
         return [Entity(**item) for item in response.get("data", [])]
 
     def link(self, entity_id: str, memory_id: str) -> None:

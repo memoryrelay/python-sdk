@@ -58,6 +58,7 @@ class AgentsResource:
             Agent object
         """
         response = self._client._request("GET", f"/v1/agents/{agent_id}")
+        assert isinstance(response, dict)
         return Agent(**response)
 
     def list(self, limit: int = 100, offset: int = 0) -> list[Agent]:
@@ -73,6 +74,7 @@ class AgentsResource:
         """
         params = {"limit": limit, "offset": offset}
         response = self._client._request("GET", "/v1/agents", params=params)
+        assert isinstance(response, dict)
         return [Agent(**item) for item in response.get("data", [])]
 
     def update(
