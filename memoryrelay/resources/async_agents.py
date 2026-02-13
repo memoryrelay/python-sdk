@@ -1,6 +1,6 @@
 """Async Agents resource - placeholder."""
 
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from memoryrelay.async_client import AsyncMemoryRelay
