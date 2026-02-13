@@ -2,7 +2,7 @@
 Agents resource - agent management.
 """
 
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any, Optional, cast
 
 from memoryrelay.types import Agent
 
@@ -45,7 +45,7 @@ class AgentsResource:
                 "metadata": metadata,
             },
         )
-        return Agent(**response)
+        return Agent(**cast(dict[str, Any], response))
 
     def get(self, agent_id: str) -> Agent:
         """
@@ -59,7 +59,7 @@ class AgentsResource:
         """
         response = self._client._request("GET", f"/v1/agents/{agent_id}")
         assert isinstance(response, dict)
-        return Agent(**response)
+        return Agent(**cast(dict[str, Any], response))
 
     def list(self, limit: int = 100, offset: int = 0) -> list[Agent]:
         """
@@ -75,7 +75,7 @@ class AgentsResource:
         params = {"limit": limit, "offset": offset}
         response = self._client._request("GET", "/v1/agents", params=params)
         assert isinstance(response, dict)
-        return [Agent(**item) for item in response.get("data", [])]
+        return [Agent(**item) for item in cast(dict[str, Any], response).get("data", [])]
 
     def update(
         self,
@@ -105,7 +105,7 @@ class AgentsResource:
                 "metadata": metadata,
             },
         )
-        return Agent(**response)
+        return Agent(**cast(dict[str, Any], response))
 
     def delete(self, agent_id: str) -> None:
         """

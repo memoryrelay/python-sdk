@@ -2,7 +2,7 @@
 Entities resource - entity tracking and relationships.
 """
 
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any, Optional, cast
 
 from memoryrelay.types import Entity
 
@@ -45,7 +45,7 @@ class EntitiesResource:
                 "metadata": metadata,
             },
         )
-        return Entity(**response)
+        return Entity(**cast(dict[str, Any], response))
 
     def get(self, entity_id: str) -> Entity:
         """
@@ -59,7 +59,7 @@ class EntitiesResource:
         """
         response = self._client._request("GET", f"/v1/entities/{entity_id}")
         assert isinstance(response, dict)
-        return Entity(**response)
+        return Entity(**cast(dict[str, Any], response))
 
     def list(
         self,
@@ -88,7 +88,7 @@ class EntitiesResource:
 
         response = self._client._request("GET", "/v1/entities", params=params)
         assert isinstance(response, dict)
-        return [Entity(**item) for item in response.get("data", [])]
+        return [Entity(**item) for item in cast(dict[str, Any], response).get("data", [])]
 
     def link(self, entity_id: str, memory_id: str) -> None:
         """

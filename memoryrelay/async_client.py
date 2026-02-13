@@ -6,7 +6,7 @@ Async/await version of the MemoryRelay client for use with asyncio.
 
 import asyncio
 import logging
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, cast
 
 import httpx
 
@@ -118,8 +118,7 @@ class AsyncMemoryRelay:
             >>> print(health.services)  # {"database": "up", ...}
         """
         response = await self._request("GET", "/v1/health")
-        assert isinstance(response, dict)
-        return HealthStatus(**response)
+        return HealthStatus(**cast(dict[str, Any], response))
 
     async def _request(
         self,
@@ -158,7 +157,7 @@ class AsyncMemoryRelay:
             req_headers.update(headers)
 
         # Retry logic with exponential backoff
-        last_exception = None
+        last_exception: Optional[Exception] = None
         for attempt in range(self.max_retries):
             try:
                 logger.debug(f"{method} {path} (attempt {attempt + 1}/{self.max_retries})")
@@ -184,7 +183,7 @@ class AsyncMemoryRelay:
                 if response.status_code == 204:
                     return None
 
-                return response.json()
+                return cast(Union[dict[str, Any], list[Any]], response.json())
 
             except httpx.TimeoutException as e:
                 logger.warning(f"Request timeout: {e}")
@@ -230,6 +229,9 @@ class AsyncMemoryRelay:
         # Should never reach here, but just in case
         if last_exception:
             raise last_exception
+
+        # Fallback (should never happen)
+        raise APIError("Request failed after all retries", status_code=500)
 
     def _handle_error(self, response: httpx.Response) -> None:
         """Handle error responses from API."""

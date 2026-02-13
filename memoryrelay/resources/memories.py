@@ -3,7 +3,7 @@ Memories resource - CRUD operations for memories.
 """
 
 import builtins
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any, Optional, cast
 
 from memoryrelay.exceptions import ValidationError
 from memoryrelay.types import (
@@ -75,7 +75,7 @@ class MemoriesResource:
                 "user_id": user_id,
             },
         )
-        return Memory(**response)
+        return Memory(**cast(dict[str, Any], response))
 
     def get(self, memory_id: str) -> Memory:
         """
@@ -92,7 +92,7 @@ class MemoriesResource:
         """
         response = self._client._request("GET", f"/v1/memories/{memory_id}")
         assert isinstance(response, dict)
-        return Memory(**response)
+        return Memory(**cast(dict[str, Any], response))
 
     def update(
         self,
@@ -130,7 +130,7 @@ class MemoriesResource:
             f"/v1/memories/{memory_id}",
             json={"content": content, "metadata": metadata},
         )
-        return Memory(**response)
+        return Memory(**cast(dict[str, Any], response))
 
     def delete(self, memory_id: str) -> None:
         """
@@ -168,7 +168,7 @@ class MemoriesResource:
 
         response = self._client._request("GET", "/v1/memories", params=params)
         assert isinstance(response, dict)
-        return [Memory(**item) for item in response.get("data", [])]
+        return [Memory(**item) for item in cast(dict[str, Any], response).get("data", [])]
 
     def search(
         self,
@@ -215,7 +215,7 @@ class MemoriesResource:
                 "metadata_filter": metadata_filter,
             },
         )
-        return [MemorySearchResult(**item) for item in response.get("data", [])]
+        return [MemorySearchResult(**item) for item in cast(dict[str, Any], response).get("data", [])]
 
     def create_batch(
         self,
@@ -253,4 +253,4 @@ class MemoriesResource:
                 "parallel_embeddings": parallel_embeddings,
             },
         )
-        return BatchMemoryResponse(**response)
+        return BatchMemoryResponse(**cast(dict[str, Any], response))
