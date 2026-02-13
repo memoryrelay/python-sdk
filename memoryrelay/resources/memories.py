@@ -215,7 +215,9 @@ class MemoriesResource:
                 "metadata_filter": metadata_filter,
             },
         )
-        return [MemorySearchResult(**item) for item in cast(dict[str, Any], response).get("data", [])]
+        return [
+            MemorySearchResult(**item) for item in cast(dict[str, Any], response).get("data", [])
+        ]
 
     def create_batch(
         self,
