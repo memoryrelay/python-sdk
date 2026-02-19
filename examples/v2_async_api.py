@@ -9,6 +9,7 @@ Demonstrates the three main patterns for using v2's async memory creation:
 
 import os
 import time
+
 from memoryrelay import MemoryRelay
 
 # Get API key from environment
