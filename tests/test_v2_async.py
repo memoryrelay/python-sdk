@@ -3,11 +3,12 @@ Tests for v2 Async API methods.
 """
 
 import time
-import pytest
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
-from memoryrelay import MemoryRelay, MemoryAsyncResponse, MemoryStatusResponse, Memory
-from memoryrelay.exceptions import ValidationError, TimeoutError
+import pytest
+
+from memoryrelay import Memory, MemoryAsyncResponse, MemoryRelay, MemoryStatusResponse
+from memoryrelay.exceptions import TimeoutError, ValidationError
 
 
 @pytest.fixture
