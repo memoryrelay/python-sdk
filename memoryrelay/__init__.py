@@ -4,7 +4,7 @@ MemoryRelay Python SDK
 Official Python client for MemoryRelay API.
 """
 
-__version__ = "0.1.1"
+__version__ = "0.2.0"
 
 from memoryrelay.async_client import AsyncMemoryRelay
 from memoryrelay.client import MemoryRelay
@@ -15,6 +15,7 @@ from memoryrelay.exceptions import (
     NotFoundError,
     RateLimitError,
     ValidationError,
+    TimeoutError,
 )
 from memoryrelay.types import (
     Agent,
@@ -22,6 +23,8 @@ from memoryrelay.types import (
     HealthStatus,
     Memory,
     MemorySearchResult,
+    MemoryAsyncResponse,
+    MemoryStatusResponse,
 )
 
 __all__ = [
@@ -33,8 +36,11 @@ __all__ = [
     "RateLimitError",
     "NotFoundError",
     "ValidationError",
+    "TimeoutError",
     "Memory",
     "MemorySearchResult",
+    "MemoryAsyncResponse",
+    "MemoryStatusResponse",
     "Entity",
     "Agent",
     "HealthStatus",

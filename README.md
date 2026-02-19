@@ -9,6 +9,7 @@ Official Python client for [MemoryRelay](https://memoryrelay.io) - persistent me
 ## Features
 
 - 🚀 **Simple API** - Intuitive Pythonic interface
+- ⚡ **v2 Async API** - 60-600x faster with background processing
 - ⚡ **Async/Await Support** - Full async client for high-performance applications
 - 🔍 **Semantic Search** - Vector-based memory retrieval
 - 📦 **Batch Operations** - Create multiple memories efficiently
@@ -76,6 +77,47 @@ async def main():
 
 asyncio.run(main())
 ```
+
+### v2 Async API (60-600x Faster)
+
+The v2 API returns immediately (202 Accepted) while embedding generation happens in the background.
+
+```python
+from memoryrelay import MemoryRelay
+
+client = MemoryRelay(api_key="mem_your_api_key_here")
+
+# Strategy 1: Fire-and-forget (fastest, no waiting)
+response = client.memories.create_async(
+    content="User prefers dark mode",
+    agent_id="my-agent"
+)
+print(f"Memory {response.id} queued (job: {response.job_id})")
+# API response in <50ms! Memory will be ready in ~3s
+
+# Strategy 2: Poll until ready (drop-in v1 replacement)
+response = client.memories.create_async(
+    content="User's favorite color is blue",
+    agent_id="my-agent"
+)
+memory = client.memories.wait_for_ready(response.id, timeout=10)
+# Blocks until embedding is generated (still faster than v1!)
+
+# Strategy 3: Create and wait (convenience helper)
+memory = client.memories.create_and_wait(
+    content="User timezone is America/New_York",
+    agent_id="my-agent",
+    timeout=10
+)
+# Same interface as v1, but uses v2 internally (faster!)
+```
+
+**Performance:**
+- v1 (sync): 2-30s per memory (blocking)
+- v2 (async): <50ms API response + 2-5s background processing
+- **Speedup: 60-600x faster API response time**
+
+See [examples/v2_async_api.py](examples/v2_async_api.py) for detailed examples.
 
 ## Usage
 
