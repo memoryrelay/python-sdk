@@ -77,9 +77,24 @@ class TestV2AsyncAPI:
 
         # Mock status response (pending → ready)
         status_responses = [
-            {"id": memory_id, "status": "pending", "created_at": "2026-02-19T20:00:00Z", "updated_at": "2026-02-19T20:00:00Z"},
-            {"id": memory_id, "status": "processing", "created_at": "2026-02-19T20:00:00Z", "updated_at": "2026-02-19T20:00:01Z"},
-            {"id": memory_id, "status": "ready", "created_at": "2026-02-19T20:00:00Z", "updated_at": "2026-02-19T20:00:03Z"},
+            {
+                "id": memory_id,
+                "status": "pending",
+                "created_at": "2026-02-19T20:00:00Z",
+                "updated_at": "2026-02-19T20:00:00Z",
+            },
+            {
+                "id": memory_id,
+                "status": "processing",
+                "created_at": "2026-02-19T20:00:00Z",
+                "updated_at": "2026-02-19T20:00:01Z",
+            },
+            {
+                "id": memory_id,
+                "status": "ready",
+                "created_at": "2026-02-19T20:00:00Z",
+                "updated_at": "2026-02-19T20:00:03Z",
+            },
         ]
 
         # Mock memory response
@@ -237,4 +252,6 @@ class TestV2PerformanceComparison:
 
         # v2 should be at least 10x faster (realistically 60-600x)
         assert v2_duration < v1_duration / 10
-        print(f"\nPerformance: v1={v1_duration:.3f}s, v2={v2_duration:.3f}s, speedup={v1_duration/v2_duration:.0f}x")
+        print(
+            f"\nPerformance: v1={v1_duration:.3f}s, v2={v2_duration:.3f}s, speedup={v1_duration/v2_duration:.0f}x"
+        )

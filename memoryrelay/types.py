@@ -149,8 +149,6 @@ class MemoryStatusResponse(BaseModel):
     """
 
     id: str = Field(..., description="Memory ID")
-    status: str = Field(
-        ..., description="Processing status (pending/processing/ready/failed)"
-    )
+    status: str = Field(..., description="Processing status (pending/processing/ready/failed)")
     created_at: datetime = Field(..., description="When memory was created")
     updated_at: datetime = Field(..., description="When status was last updated")
