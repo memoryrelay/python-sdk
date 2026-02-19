@@ -109,10 +109,10 @@ class BatchMemoryResponse(BaseModel):
 class MemoryAsyncResponse(BaseModel):
     """
     Response from async memory creation (v2).
-    
+
     API returns 202 Accepted immediately while embedding generation
     happens in the background.
-    
+
     Example:
         >>> response = client.memories.create_async(
         ...     content="User prefers dark mode",
@@ -133,15 +133,15 @@ class MemoryAsyncResponse(BaseModel):
 class MemoryStatusResponse(BaseModel):
     """
     Memory processing status (v2).
-    
+
     Poll this endpoint to check if embedding generation is complete.
-    
+
     Status values:
     - "pending": Queued, waiting for worker
     - "processing": Worker generating embedding
     - "ready": Embedding complete, memory searchable
     - "failed": Embedding generation failed
-    
+
     Example:
         >>> status = client.memories.get_status(memory_id)
         >>> if status.status == "ready":
