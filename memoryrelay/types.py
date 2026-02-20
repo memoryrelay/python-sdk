@@ -101,3 +101,54 @@ class BatchMemoryResponse(BaseModel):
     skipped: int
     results: list[BatchMemoryResult]
     timing: dict[str, float]
+
+
+# ── v2 Async API Types ──────────────────────────────────────────
+
+
+class MemoryAsyncResponse(BaseModel):
+    """
+    Response from async memory creation (v2).
+
+    API returns 202 Accepted immediately while embedding generation
+    happens in the background.
+
+    Example:
+        >>> response = client.memories.create_async(
+        ...     content="User prefers dark mode",
+        ...     agent_id="my-agent"
+        ... )
+        >>> print(response.status)  # "pending"
+        >>> print(response.job_id)  # "arq:01HQERX3B9..."
+    """
+
+    id: str = Field(..., description="Memory ID")
+    status: str = Field(..., description="Processing status (pending)")
+    job_id: str = Field(..., description="ARQ job ID for tracking")
+    estimated_completion_seconds: int = Field(
+        ..., description="Estimated time until ready (typically 3s)"
+    )
+
+
+class MemoryStatusResponse(BaseModel):
+    """
+    Memory processing status (v2).
+
+    Poll this endpoint to check if embedding generation is complete.
+
+    Status values:
+    - "pending": Queued, waiting for worker
+    - "processing": Worker generating embedding
+    - "ready": Embedding complete, memory searchable
+    - "failed": Embedding generation failed
+
+    Example:
+        >>> status = client.memories.get_status(memory_id)
+        >>> if status.status == "ready":
+        ...     memory = client.memories.get(memory_id)
+    """
+
+    id: str = Field(..., description="Memory ID")
+    status: str = Field(..., description="Processing status (pending/processing/ready/failed)")
+    created_at: datetime = Field(..., description="When memory was created")
+    updated_at: datetime = Field(..., description="When status was last updated")
