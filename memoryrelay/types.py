@@ -24,7 +24,7 @@ class Memory(BaseModel):
     content: str
     agent_id: str
     user_id: Optional[str] = None
-    metadata: dict[str, Any] = Field(default_factory=dict)
+    metadata: Optional[dict[str, Any]] = Field(default=None)
     entities: list[EntityInfo] = Field(default_factory=list)
     memory_type: Optional[str] = Field(default=None, description="Memory type classification")
     extraction_model: Optional[str] = None
@@ -59,7 +59,7 @@ class Entity(BaseModel):
     id: str
     entity_type: str
     name: str
-    metadata: dict[str, Any] = Field(default_factory=dict)
+    metadata: Optional[dict[str, Any]] = Field(default=None)
     memory_count: int = 0
     relationship_count: int = 0
     created_at: Union[int, datetime]
@@ -82,7 +82,7 @@ class Agent(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
     config: dict[str, Any] = Field(default_factory=dict)
-    metadata: dict[str, Any] = Field(default_factory=dict)
+    metadata: Optional[dict[str, Any]] = Field(default=None)
     memory_count: Optional[int] = None
     session_count: Optional[int] = None
     project_count: Optional[int] = None
