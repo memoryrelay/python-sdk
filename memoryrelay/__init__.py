@@ -4,7 +4,7 @@ MemoryRelay Python SDK
 Official Python client for MemoryRelay API.
 """
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 from memoryrelay.async_client import AsyncMemoryRelay
 from memoryrelay.client import MemoryRelay
