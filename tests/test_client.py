@@ -91,7 +91,7 @@ def test_authentication_error():
 
     respx.post("https://api.memoryrelay.net/v1/memories").mock(
         return_value=httpx.Response(
-            401, json={"error": {"message": "Invalid API key", "request_id": "req_123"}}
+            401, json={"detail": "Invalid API key", "request_id": "req_123"}
         )
     )
 
@@ -112,7 +112,7 @@ def test_rate_limit_error():
         return_value=httpx.Response(
             429,
             headers={"Retry-After": "60"},
-            json={"error": {"message": "Rate limit exceeded", "request_id": "req_456"}},
+            json={"detail": "Rate limit exceeded", "request_id": "req_456"},
         )
     )
 
@@ -131,7 +131,7 @@ def test_not_found_error():
 
     respx.get("https://api.memoryrelay.net/v1/memories/nonexistent").mock(
         return_value=httpx.Response(
-            404, json={"error": {"message": "Memory not found", "request_id": "req_789"}}
+            404, json={"detail": "Memory not found", "request_id": "req_789"}
         )
     )
 
@@ -149,7 +149,7 @@ def test_validation_error():
 
     respx.post("https://api.memoryrelay.net/v1/memories").mock(
         return_value=httpx.Response(
-            422, json={"error": {"message": "content is required", "request_id": "req_abc"}}
+            422, json={"detail": "content is required", "request_id": "req_abc"}
         )
     )
 
@@ -178,7 +178,7 @@ def test_network_error_retry():
                 "agent_id": "test",
                 "user_id": None,
                 "metadata": None,
-                "embedding": None,
+                "entities": [],
                 "created_at": "2026-02-12T23:00:00Z",
                 "updated_at": "2026-02-12T23:00:00Z",
             },

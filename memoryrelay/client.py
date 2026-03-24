@@ -13,6 +13,7 @@ import httpx
 from memoryrelay.exceptions import (
     APIError,
     AuthenticationError,
+    ForbiddenError,
     NetworkError,
     NotFoundError,
     RateLimitError,
@@ -55,7 +56,7 @@ class MemoryRelay:
 
     def __init__(
         self,
-        api_key: str,
+        api_key: Optional[str] = None,
         base_url: str = "https://api.memoryrelay.net",
         timeout: float = 30.0,
         max_retries: int = 3,
@@ -65,12 +66,24 @@ class MemoryRelay:
         Initialize MemoryRelay client.
 
         Args:
-            api_key: Your MemoryRelay API key (required)
+            api_key: Your MemoryRelay API key. Can also be set via MEMORYRELAY_API_KEY env var.
             base_url: API base URL (default: https://api.memoryrelay.net)
             timeout: Request timeout in seconds (default: 30.0)
             max_retries: Maximum number of retries for failed requests (default: 3)
             **kwargs: Additional arguments passed to httpx.Client
         """
+        if not api_key:
+            import os
+
+            api_key = os.getenv("MEMORYRELAY_API_KEY")
+
+        if not api_key:
+            raise AuthenticationError(
+                "API key is required. Provide via api_key parameter or "
+                "MEMORYRELAY_API_KEY environment variable.",
+                status_code=401,
+            )
+
         self.api_key = api_key
         self.base_url = base_url.rstrip("/")
         self.timeout = timeout
@@ -239,8 +252,9 @@ class MemoryRelay:
 
         try:
             error_data = response.json()
-            error_msg = error_data.get("error", {}).get("message", "Unknown error")
-            request_id = error_data.get("error", {}).get("request_id")
+            # API returns RFC 7807 format with `detail` at the top level
+            error_msg = error_data.get("detail", "Unknown error")
+            request_id = error_data.get("request_id")
         except Exception:
             error_msg = response.text or f"HTTP {response.status_code}"
             request_id = None
@@ -250,6 +264,13 @@ class MemoryRelay:
             raise AuthenticationError(
                 error_msg,
                 status_code=401,
+                response=error_data,
+                request_id=request_id,
+            )
+        elif response.status_code == 403:
+            raise ForbiddenError(
+                error_msg,
+                status_code=403,
                 response=error_data,
                 request_id=request_id,
             )

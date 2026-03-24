@@ -3,42 +3,65 @@ Type definitions for MemoryRelay SDK.
 """
 
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from pydantic import BaseModel, Field
+
+
+class EntityInfo(BaseModel):
+    """An extracted entity embedded in a memory response."""
+
+    type: str
+    value: str
+    confidence: float = Field(default=1.0, description="Extraction confidence score (0.0-1.0)")
 
 
 class Memory(BaseModel):
     """A memory object."""
 
     id: str
+    object: str = "memory"
     content: str
     agent_id: str
     user_id: Optional[str] = None
-    metadata: Optional[dict[str, Any]] = None
-    embedding: Optional[list[float]] = None
-    created_at: datetime
-    updated_at: datetime
+    metadata: dict[str, Any] = Field(default_factory=dict)
+    entities: list[EntityInfo] = Field(default_factory=list)
+    memory_type: Optional[str] = Field(default=None, description="Memory type classification")
+    extraction_model: Optional[str] = None
+    extraction_method: Optional[str] = None
+    extraction_status: Optional[str] = None
+    visibility: Optional[str] = "private"
+    salience_score: Optional[float] = Field(default=None, description="Computed salience score (0-1)")
+    importance: Optional[float] = Field(
+        default=None, description="User/agent-assigned priority (0.0-1.0)"
+    )
+    tier: Optional[str] = Field(default=None, description="Memory tier: hot, warm, or cold")
+    is_duplicate: bool = False
+    session_id: Optional[str] = Field(default=None, description="Session this memory belongs to")
+    project_id: Optional[str] = Field(default=None, description="Project this memory is scoped to")
+    archived_at: Optional[Union[int, datetime]] = None
+    created_at: Union[int, datetime]
+    updated_at: Union[int, datetime]
 
 
 class MemorySearchResult(BaseModel):
     """Search result with memory and relevance score."""
 
     memory: Memory
-    score: float
-    distance: Optional[float] = None
+    score: float = Field(description="Similarity score (0-1)", ge=0.0, le=1.0)
 
 
 class Entity(BaseModel):
     """An entity object."""
 
     id: str
-    agent_id: str
     entity_type: str
-    entity_value: str
-    metadata: Optional[dict[str, Any]] = None
-    created_at: datetime
-    updated_at: datetime
+    name: str
+    metadata: dict[str, Any] = Field(default_factory=dict)
+    memory_count: int = 0
+    relationship_count: int = 0
+    created_at: Union[int, datetime]
+    updated_at: Union[int, datetime]
 
 
 class EntityLink(BaseModel):
@@ -46,7 +69,8 @@ class EntityLink(BaseModel):
 
     entity_id: str
     memory_id: str
-    created_at: datetime
+    relevance_score: float = 0.0
+    created_at: Union[int, datetime]
 
 
 class Agent(BaseModel):
@@ -55,9 +79,14 @@ class Agent(BaseModel):
     id: str
     name: Optional[str] = None
     description: Optional[str] = None
-    metadata: Optional[dict[str, Any]] = None
-    created_at: datetime
-    updated_at: datetime
+    config: dict[str, Any] = Field(default_factory=dict)
+    metadata: dict[str, Any] = Field(default_factory=dict)
+    memory_count: Optional[int] = None
+    session_count: Optional[int] = None
+    project_count: Optional[int] = None
+    last_active_at: Optional[datetime] = None
+    created_at: Union[int, datetime]
+    updated_at: Union[int, datetime]
 
 
 class HealthStatus(BaseModel):
@@ -80,15 +109,18 @@ class BatchMemoryItem(BaseModel):
     agent_id: Optional[str] = None
     user_id: Optional[str] = None
     client_id: Optional[str] = None
+    session_id: Optional[str] = None
 
 
 class BatchMemoryResult(BaseModel):
     """Result for a single memory in batch operation."""
 
+    index: int = Field(description="Index in the request array")
     status: str  # "success", "failed", "skipped"
     memory_id: Optional[str] = None
     error: Optional[str] = None
-    client_id: Optional[str] = None
+    error_code: Optional[str] = None
+    content_preview: str = Field(default="", description="First 100 chars of memory content")
 
 
 class BatchMemoryResponse(BaseModel):
@@ -98,9 +130,9 @@ class BatchMemoryResponse(BaseModel):
     total: int
     succeeded: int
     failed: int
-    skipped: int
+    skipped: int = 0
     results: list[BatchMemoryResult]
-    timing: dict[str, float]
+    timing: dict[str, float] = Field(default_factory=dict)
 
 
 # ── v2 Async API Types ──────────────────────────────────────────
@@ -124,9 +156,9 @@ class MemoryAsyncResponse(BaseModel):
 
     id: str = Field(..., description="Memory ID")
     status: str = Field(..., description="Processing status (pending)")
-    job_id: str = Field(..., description="ARQ job ID for tracking")
-    estimated_completion_seconds: int = Field(
-        ..., description="Estimated time until ready (typically 3s)"
+    job_id: Optional[str] = Field(default=None, description="ARQ job ID for tracking")
+    estimated_completion_seconds: Optional[int] = Field(
+        default=None, description="Estimated time until ready (typically 3s)"
     )
 
 
@@ -150,5 +182,10 @@ class MemoryStatusResponse(BaseModel):
 
     id: str = Field(..., description="Memory ID")
     status: str = Field(..., description="Processing status (pending/processing/ready/failed)")
-    created_at: datetime = Field(..., description="When memory was created")
-    updated_at: datetime = Field(..., description="When status was last updated")
+    created_at: Optional[Union[int, datetime]] = Field(
+        default=None, description="When memory was created"
+    )
+    updated_at: Optional[Union[int, datetime]] = Field(
+        default=None, description="When status was last updated"
+    )
+    error: Optional[str] = Field(default=None, description="Error message if failed")

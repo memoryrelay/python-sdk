@@ -62,7 +62,7 @@ elapsed_ms = (time.time() - start) * 1000
 print(f" ready in {elapsed_ms:.0f}ms")
 print(f"  Memory ID: {memory.id}")
 print(f"  Content: {memory.content}")
-print(f"  Embedding dims: {len(memory.embedding) if memory.embedding else 0}")
+print(f"  Entities: {len(memory.entities)}")
 print("\nUse case: Interactive flows, immediate feedback needed")
 
 # ── Example 3: Create and Wait (Convenience Helper) ─────────────

@@ -19,8 +19,7 @@ class EntitiesResource:
     def create(
         self,
         entity_type: str,
-        entity_value: str,
-        agent_id: str,
+        name: str,
         metadata: Optional[dict[str, Any]] = None,
     ) -> Entity:
         """
@@ -28,8 +27,7 @@ class EntitiesResource:
 
         Args:
             entity_type: Type of entity (e.g., "person", "organization", "project")
-            entity_value: Value/name of entity
-            agent_id: Agent identifier
+            name: Name of the entity
             metadata: Optional metadata
 
         Returns:
@@ -40,8 +38,7 @@ class EntitiesResource:
             "/v1/entities",
             json={
                 "entity_type": entity_type,
-                "entity_value": entity_value,
-                "agent_id": agent_id,
+                "name": name,
                 "metadata": metadata,
             },
         )
@@ -90,31 +87,23 @@ class EntitiesResource:
         assert isinstance(response, dict)
         return [Entity(**item) for item in cast(dict[str, Any], response).get("data", [])]
 
-    def link(self, entity_id: str, memory_id: str) -> None:
+    def link(self, entity_id: str, memory_id: str, relationship: Optional[str] = None) -> None:
         """
         Link an entity to a memory.
 
         Args:
             entity_id: Entity ID
             memory_id: Memory ID
+            relationship: Relationship label (default: "mentioned_in")
         """
+        body: dict[str, Any] = {"memory_id": memory_id}
+        if relationship:
+            body["relationship"] = relationship
+
         self._client._request(
             "POST",
             f"/v1/entities/{entity_id}/link",
-            json={"memory_id": memory_id},
-        )
-
-    def unlink(self, entity_id: str, memory_id: str) -> None:
-        """
-        Unlink an entity from a memory.
-
-        Args:
-            entity_id: Entity ID
-            memory_id: Memory ID
-        """
-        self._client._request(
-            "DELETE",
-            f"/v1/entities/{entity_id}/link/{memory_id}",
+            json=body,
         )
 
     def delete(self, entity_id: str) -> None:

@@ -11,6 +11,7 @@ from memoryrelay.client import MemoryRelay
 from memoryrelay.exceptions import (
     APIError,
     AuthenticationError,
+    ForbiddenError,
     MemoryRelayError,
     NotFoundError,
     RateLimitError,
@@ -20,6 +21,7 @@ from memoryrelay.exceptions import (
 from memoryrelay.types import (
     Agent,
     Entity,
+    EntityInfo,
     HealthStatus,
     Memory,
     MemoryAsyncResponse,
@@ -33,6 +35,8 @@ __all__ = [
     "AsyncMemoryRelay",
     "AuthenticationError",
     "Entity",
+    "EntityInfo",
+    "ForbiddenError",
     "HealthStatus",
     "Memory",
     "MemoryAsyncResponse",

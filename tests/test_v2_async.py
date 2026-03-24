@@ -102,7 +102,7 @@ class TestV2AsyncAPI:
             "id": memory_id,
             "content": "Test memory",
             "agent_id": "test-agent",
-            "embedding": [0.1] * 384,
+            "entities": [],
             "created_at": "2026-02-19T20:00:00Z",
             "updated_at": "2026-02-19T20:00:03Z",
         }
@@ -124,7 +124,7 @@ class TestV2AsyncAPI:
             assert isinstance(memory, Memory)
             assert memory.id == memory_id
             assert memory.content == "Test memory"
-            assert len(memory.embedding) == 384
+            assert memory.entities == []
 
     def test_wait_for_ready_timeout(self, client):
         """Test wait_for_ready with timeout."""
@@ -182,7 +182,7 @@ class TestV2AsyncAPI:
             "id": memory_id,
             "content": "Test memory",
             "agent_id": "test-agent",
-            "embedding": [0.1] * 384,
+            "entities": [],
             "created_at": "2026-02-19T20:00:00Z",
             "updated_at": "2026-02-19T20:00:03Z",
         }
@@ -205,7 +205,7 @@ class TestV2AsyncAPI:
             assert isinstance(memory, Memory)
             assert memory.id == memory_id
             assert memory.content == "Test memory"
-            assert len(memory.embedding) == 384
+            assert memory.entities == []
 
 
 class TestV2PerformanceComparison:
@@ -218,7 +218,7 @@ class TestV2PerformanceComparison:
             "id": "550e8400-e29b-41d4-a716-446655440000",
             "content": "Test memory",
             "agent_id": "test-agent",
-            "embedding": [0.1] * 384,
+            "entities": [],
             "created_at": "2026-02-19T20:00:00Z",
             "updated_at": "2026-02-19T20:00:05Z",
         }
