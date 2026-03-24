@@ -349,11 +349,11 @@ mypy memoryrelay
 
 ## API Reference
 
-Full API documentation available at [memoryrelay.ai/docs](https://memoryrelay.ai/docs)
+Full API documentation available at [docs.memoryrelay.ai](https://docs.memoryrelay.ai/)
 
 ## Support
 
-- **Documentation**: [memoryrelay.ai/docs](https://memoryrelay.ai/docs)
+- **Documentation**: [docs.memoryrelay.ai](https://docs.memoryrelay.ai/)
 - **GitHub Issues**: [github.com/memoryrelay/python-sdk/issues](https://github.com/memoryrelay/python-sdk/issues)
 - **Email**: hello@memoryrelay.ai
 

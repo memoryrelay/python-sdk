@@ -44,7 +44,7 @@ dev = [
 
 [project.urls]
 Homepage = "https://memoryrelay.ai"
-Documentation = "https://memoryrelay.ai/docs"
+Documentation = "https://docs.memoryrelay.ai/"
 Repository = "https://github.com/memoryrelay/python-sdk"
 Issues = "https://github.com/memoryrelay/python-sdk/issues"
 
