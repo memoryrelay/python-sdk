@@ -31,7 +31,9 @@ class Memory(BaseModel):
     extraction_method: Optional[str] = None
     extraction_status: Optional[str] = None
     visibility: Optional[str] = "private"
-    salience_score: Optional[float] = Field(default=None, description="Computed salience score (0-1)")
+    salience_score: Optional[float] = Field(
+        default=None, description="Computed salience score (0-1)"
+    )
     importance: Optional[float] = Field(
         default=None, description="User/agent-assigned priority (0.0-1.0)"
     )

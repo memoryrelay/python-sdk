@@ -297,9 +297,27 @@ def test_batch_create():
                 "failed": 0,
                 "skipped": 0,
                 "results": [
-                    {"index": 0, "status": "success", "memory_id": "mem_1", "error": None, "content_preview": "Memory 1"},
-                    {"index": 1, "status": "success", "memory_id": "mem_2", "error": None, "content_preview": "Memory 2"},
-                    {"index": 2, "status": "success", "memory_id": "mem_3", "error": None, "content_preview": "Memory 3"},
+                    {
+                        "index": 0,
+                        "status": "success",
+                        "memory_id": "mem_1",
+                        "error": None,
+                        "content_preview": "Memory 1",
+                    },
+                    {
+                        "index": 1,
+                        "status": "success",
+                        "memory_id": "mem_2",
+                        "error": None,
+                        "content_preview": "Memory 2",
+                    },
+                    {
+                        "index": 2,
+                        "status": "success",
+                        "memory_id": "mem_3",
+                        "error": None,
+                        "content_preview": "Memory 3",
+                    },
                 ],
                 "timing": {
                     "total_ms": 99.5,
