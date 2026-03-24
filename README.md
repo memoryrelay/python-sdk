@@ -1,6 +1,6 @@
 # MemoryRelay Python SDK
 
-Official Python client for [MemoryRelay](https://memoryrelay.io) - persistent memory for AI agents.
+Official Python client for [MemoryRelay](https://memoryrelay.ai) - persistent memory for AI agents.
 
 [![PyPI version](https://img.shields.io/pypi/v/memoryrelay)](https://pypi.org/project/memoryrelay/)
 [![Python versions](https://img.shields.io/pypi/pyversions/memoryrelay)](https://pypi.org/project/memoryrelay/)
@@ -258,8 +258,7 @@ memories = client.memories.list(
 # Create entity
 entity = client.entities.create(
     entity_type="person",
-    entity_value="John Doe",
-    agent_id="my-agent"
+    name="John Doe"
 )
 
 # Link entity to memory
@@ -350,13 +349,13 @@ mypy memoryrelay
 
 ## API Reference
 
-Full API documentation available at [memoryrelay.io/docs](https://memoryrelay.io/docs)
+Full API documentation available at [docs.memoryrelay.ai](https://docs.memoryrelay.ai/)
 
 ## Support
 
-- **Documentation**: [memoryrelay.io/docs](https://memoryrelay.io/docs)
+- **Documentation**: [docs.memoryrelay.ai](https://docs.memoryrelay.ai/)
 - **GitHub Issues**: [github.com/memoryrelay/python-sdk/issues](https://github.com/memoryrelay/python-sdk/issues)
-- **Email**: hello@memoryrelay.io
+- **Email**: hello@memoryrelay.ai
 
 ## License
 

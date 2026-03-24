@@ -24,7 +24,7 @@ def test_create_memory():
                 "agent_id": "test-agent",
                 "user_id": None,
                 "metadata": {"category": "preference"},
-                "embedding": None,
+                "entities": [],
                 "created_at": "2026-02-12T23:00:00Z",
                 "updated_at": "2026-02-12T23:00:00Z",
             },
@@ -98,7 +98,7 @@ def test_get_memory():
                 "agent_id": "test-agent",
                 "user_id": None,
                 "metadata": None,
-                "embedding": None,
+                "entities": [],
                 "created_at": "2026-02-12T23:00:00Z",
                 "updated_at": "2026-02-12T23:00:00Z",
             },
@@ -117,7 +117,7 @@ def test_get_memory_not_found():
     client = MemoryRelay(api_key="test_key")
 
     respx.get("https://api.memoryrelay.net/v1/memories/nonexistent").mock(
-        return_value=httpx.Response(404, json={"error": {"message": "Memory not found"}})
+        return_value=httpx.Response(404, json={"detail": "Memory not found"})
     )
 
     with pytest.raises(NotFoundError):
@@ -138,7 +138,7 @@ def test_update_memory():
                 "agent_id": "test-agent",
                 "user_id": None,
                 "metadata": {"updated": True},
-                "embedding": None,
+                "entities": [],
                 "created_at": "2026-02-12T23:00:00Z",
                 "updated_at": "2026-02-12T23:05:00Z",
             },
@@ -205,7 +205,7 @@ def test_list_memories():
                         "agent_id": "test-agent",
                         "user_id": None,
                         "metadata": None,
-                        "embedding": None,
+                        "entities": [],
                         "created_at": "2026-02-12T23:00:00Z",
                         "updated_at": "2026-02-12T23:00:00Z",
                     },
@@ -215,7 +215,7 @@ def test_list_memories():
                         "agent_id": "test-agent",
                         "user_id": None,
                         "metadata": None,
-                        "embedding": None,
+                        "entities": [],
                         "created_at": "2026-02-12T23:01:00Z",
                         "updated_at": "2026-02-12T23:01:00Z",
                     },
@@ -248,7 +248,7 @@ def test_search_memories():
                             "agent_id": "test-agent",
                             "user_id": None,
                             "metadata": None,
-                            "embedding": None,
+                            "entities": [],
                             "created_at": "2026-02-12T23:00:00Z",
                             "updated_at": "2026-02-12T23:00:00Z",
                         },
@@ -262,7 +262,7 @@ def test_search_memories():
                             "agent_id": "test-agent",
                             "user_id": None,
                             "metadata": None,
-                            "embedding": None,
+                            "entities": [],
                             "created_at": "2026-02-12T23:01:00Z",
                             "updated_at": "2026-02-12T23:01:00Z",
                         },
@@ -297,9 +297,27 @@ def test_batch_create():
                 "failed": 0,
                 "skipped": 0,
                 "results": [
-                    {"status": "success", "memory_id": "mem_1", "error": None},
-                    {"status": "success", "memory_id": "mem_2", "error": None},
-                    {"status": "success", "memory_id": "mem_3", "error": None},
+                    {
+                        "index": 0,
+                        "status": "success",
+                        "memory_id": "mem_1",
+                        "error": None,
+                        "content_preview": "Memory 1",
+                    },
+                    {
+                        "index": 1,
+                        "status": "success",
+                        "memory_id": "mem_2",
+                        "error": None,
+                        "content_preview": "Memory 2",
+                    },
+                    {
+                        "index": 2,
+                        "status": "success",
+                        "memory_id": "mem_3",
+                        "error": None,
+                        "content_preview": "Memory 3",
+                    },
                 ],
                 "timing": {
                     "total_ms": 99.5,

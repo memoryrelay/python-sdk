@@ -48,6 +48,12 @@ class RateLimitError(APIError):
         self.retry_after = retry_after
 
 
+class ForbiddenError(APIError):
+    """Access forbidden (403)."""
+
+    pass
+
+
 class NotFoundError(APIError):
     """Resource not found (404)."""
 

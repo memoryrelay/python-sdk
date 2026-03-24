@@ -9,7 +9,7 @@ description = "Official Python SDK for MemoryRelay - persistent memory for AI ag
 readme = "README.md"
 license = { text = "MIT" }
 authors = [
-    { name = "MemoryRelay Team", email = "hello@memoryrelay.io" }
+    { name = "MemoryRelay Team", email = "hello@memoryrelay.ai" }
 ]
 keywords = ["ai", "memory", "vector-search", "embeddings", "llm", "agents"]
 classifiers = [
@@ -43,8 +43,8 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://memoryrelay.io"
-Documentation = "https://memoryrelay.io/docs"
+Homepage = "https://memoryrelay.ai"
+Documentation = "https://docs.memoryrelay.ai/"
 Repository = "https://github.com/memoryrelay/python-sdk"
 Issues = "https://github.com/memoryrelay/python-sdk/issues"
 

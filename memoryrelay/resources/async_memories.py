@@ -29,6 +29,15 @@ class AsyncMemoriesResource:
         agent_id: str,
         metadata: Optional[dict[str, Any]] = None,
         user_id: Optional[str] = None,
+        visibility: Optional[str] = None,
+        memory_type: Optional[str] = None,
+        importance: Optional[float] = None,
+        tier: Optional[str] = None,
+        session_id: Optional[str] = None,
+        project: Optional[str] = None,
+        deduplicate: bool = False,
+        dedup_threshold: float = 0.95,
+        auto_extract_entities: Optional[bool] = None,
     ) -> Memory:
         """
         Create a new memory.
@@ -38,6 +47,15 @@ class AsyncMemoriesResource:
             agent_id: Agent identifier
             metadata: Optional metadata dictionary
             user_id: Optional user identifier
+            visibility: Memory visibility: 'private' (default) or 'confidential'
+            memory_type: Memory type: fact, event, insight, task, preference, entity_reference, system
+            importance: Memory importance (0.0-1.0). Defaults to 0.5. Values >= 0.8 promote to hot tier.
+            tier: Memory tier override: 'hot', 'warm', or 'cold'. Auto-computed if omitted.
+            session_id: Session ID to associate this memory with
+            project: Project slug to scope this memory to
+            deduplicate: Check for duplicate content before storing (default: False)
+            dedup_threshold: Semantic similarity threshold for dedup (0.5-1.0, default: 0.95)
+            auto_extract_entities: Extract entities from content. True=always, False=never, None=auto.
 
         Returns:
             Created Memory object
@@ -65,15 +83,36 @@ class AsyncMemoriesResource:
         if not agent_id or not agent_id.strip():
             raise ValidationError("agent_id cannot be empty", status_code=400)
 
+        body: dict[str, Any] = {
+            "content": content,
+            "agent_id": agent_id,
+        }
+        if metadata is not None:
+            body["metadata"] = metadata
+        if user_id is not None:
+            body["user_id"] = user_id
+        if visibility is not None:
+            body["visibility"] = visibility
+        if memory_type is not None:
+            body["memory_type"] = memory_type
+        if importance is not None:
+            body["importance"] = importance
+        if tier is not None:
+            body["tier"] = tier
+        if session_id is not None:
+            body["session_id"] = session_id
+        if project is not None:
+            body["project"] = project
+        if deduplicate:
+            body["deduplicate"] = deduplicate
+            body["dedup_threshold"] = dedup_threshold
+        if auto_extract_entities is not None:
+            body["auto_extract_entities"] = auto_extract_entities
+
         response = await self._client._request(
             "POST",
             "/v1/memories",
-            json={
-                "content": content,
-                "agent_id": agent_id,
-                "metadata": metadata,
-                "user_id": user_id,
-            },
+            json=body,
         )
         return Memory(**cast(dict[str, Any], response))
 
@@ -178,6 +217,7 @@ class AsyncMemoriesResource:
         limit: int = 10,
         min_score: float = 0.0,
         metadata_filter: Optional[dict[str, Any]] = None,
+        search_mode: Optional[str] = None,
     ) -> builtins.list[MemorySearchResult]:
         """
         Semantic search for memories.
@@ -189,6 +229,7 @@ class AsyncMemoriesResource:
             limit: Maximum number of results (default: 10)
             min_score: Minimum similarity score (0.0-1.0, default: 0.0)
             metadata_filter: Filter by metadata fields
+            search_mode: Search mode: 'hybrid' (default), 'semantic', 'keyword'
 
         Returns:
             List of MemorySearchResult objects with memories and scores
@@ -203,17 +244,24 @@ class AsyncMemoriesResource:
             >>> for result in results:
             ...     print(f"Score: {result.score}, Content: {result.memory.content}")
         """
+        body: dict[str, Any] = {
+            "query": query,
+            "limit": limit,
+            "min_score": min_score,
+        }
+        if agent_id is not None:
+            body["agent_id"] = agent_id
+        if user_id is not None:
+            body["user_id"] = user_id
+        if metadata_filter is not None:
+            body["metadata_filter"] = metadata_filter
+        if search_mode is not None:
+            body["search_mode"] = search_mode
+
         response = await self._client._request(
             "POST",
             "/v1/memories/search",
-            json={
-                "query": query,
-                "agent_id": agent_id,
-                "user_id": user_id,
-                "limit": limit,
-                "min_score": min_score,
-                "metadata_filter": metadata_filter,
-            },
+            json=body,
         )
         return [
             MemorySearchResult(**item) for item in cast(dict[str, Any], response).get("data", [])
