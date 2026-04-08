@@ -22,12 +22,19 @@ def test_production_api():
     print("=" * 70)
     print()
 
-    # Use production API key
-    api_key = "mem_prod_e0affdcce0f3859b2ee691f6cfd73ff2"
-    api_url = "https://api.memoryrelay.net"
+    # Use production API key from environment
+    import os
+
+    api_key = os.environ.get("MEMORYRELAY_API_KEY", "")
+    api_url = os.environ.get("MEMORYRELAY_API_URL", "https://api.memoryrelay.net")
+
+    if not api_key:
+        print("❌ MEMORYRELAY_API_KEY environment variable is required")
+        print("   Usage: MEMORYRELAY_API_KEY=mem_prod_xxx python test_production.py")
+        return False
 
     print(f"API URL: {api_url}")
-    print(f"API Key: {api_key[:20]}...")
+    print(f"API Key: {api_key[:8]}...{api_key[-4:]}")
     print()
 
     # Initialize client
