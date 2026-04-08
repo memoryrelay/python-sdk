@@ -34,7 +34,7 @@ def test_production_api():
         return False
 
     print(f"API URL: {api_url}")
-    print(f"API Key: {api_key[:8]}...{api_key[-4:]}")
+    print("API Key: [REDACTED]")
     print()
 
     # Initialize client
