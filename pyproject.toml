@@ -4,41 +4,46 @@ build-backend = "hatchling.build"
 
 [project]
 name = "memoryrelay"
-version = "0.3.0"
-description = "Official Python SDK for MemoryRelay - persistent memory for AI agents with v2 async API support"
+version = "0.4.0"
+description = "Official Python SDK for MemoryRelay - ICM workspaces and persistent memory for AI agents"
 readme = "README.md"
-license = { text = "MIT" }
+requires-python = ">=3.10"
+license = {text = "MIT"}
 authors = [
     { name = "MemoryRelay Team", email = "hello@memoryrelay.ai" }
 ]
-keywords = ["ai", "memory", "vector-search", "embeddings", "llm", "agents"]
+keywords = ["ai", "memory", "api", "sdk", "llm", "agents"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Typing :: Typed",
 ]
-requires-python = ">=3.9"
+
 dependencies = [
-    "httpx>=0.25.0",
+    "httpx>=0.27.0",
     "pydantic>=2.0.0",
-    "typing-extensions>=4.5.0",
 ]
 
 [project.optional-dependencies]
+langchain = [
+    "langchain-core>=0.1.0",
+]
+llamaindex = [
+    "llama-index-core>=0.10.0",
+]
 dev = [
-    "pytest>=7.4.0",
+    "pytest>=7.0.0",
     "pytest-asyncio>=0.21.0",
+    "mypy>=1.0.0",
+    "ruff>=0.1.0",
     "pytest-cov>=4.1.0",
     "black>=23.0.0",
-    "ruff>=0.1.0",
-    "mypy>=1.5.0",
     "respx>=0.20.0",
 ]
 
@@ -51,28 +56,23 @@ Issues = "https://github.com/memoryrelay/python-sdk/issues"
 [tool.hatch.build.targets.wheel]
 packages = ["memoryrelay"]
 
+[tool.mypy]
+python_version = "3.10"
+warn_unused_configs = true
+ignore_missing_imports = true
+
 [tool.black]
 line-length = 100
-target-version = ["py39", "py310", "py311", "py312"]
+target-version = ["py310", "py311", "py312"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py39"
+target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP"]
 ignore = ["E501"]
 
-[tool.mypy]
-python_version = "3.9"
-warn_return_any = false
-warn_unused_configs = true
-disallow_untyped_defs = false
-check_untyped_defs = false
-
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
-python_files = ["test_*.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]

@@ -1,22 +1,6 @@
 # MemoryRelay Python SDK
 
-Official Python client for [MemoryRelay](https://memoryrelay.ai) - persistent memory for AI agents.
-
-[![PyPI version](https://img.shields.io/pypi/v/memoryrelay)](https://pypi.org/project/memoryrelay/)
-[![Python versions](https://img.shields.io/pypi/pyversions/memoryrelay)](https://pypi.org/project/memoryrelay/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-## Features
-
-- 🚀 **Simple API** - Intuitive Pythonic interface
-- ⚡ **v2 Async API** - 60-600x faster with background processing
-- ⚡ **Async/Await Support** - Full async client for high-performance applications
-- 🔍 **Semantic Search** - Vector-based memory retrieval
-- 📦 **Batch Operations** - Create multiple memories efficiently
-- 🏷️ **Entity Tracking** - Automatic relationship management
-- 🔐 **Type Safe** - Full Pydantic models and type hints
-- 🐍 **Python 3.9+** - Modern Python support
-- ✅ **Production Tested** - Verified against live API
+Official Python client for the [MemoryRelay](https://memoryrelay.ai) API - A scalable memory management system for AI agents.
 
 ## Installation
 
@@ -26,337 +10,317 @@ pip install memoryrelay
 
 ## Quick Start
 
-### Sync Client
+### Synchronous Client
 
 ```python
-from memoryrelay import MemoryRelay
+from memoryrelay import MemoryRelay, MemoryCreate, AgentCreate
 
 # Initialize client
-client = MemoryRelay(api_key="mem_your_api_key_here")
+client = MemoryRelay(api_key="your-api-key")
 
-# Create a memory
+# Create an agent
+agent = client.agents.create(
+    AgentCreate(
+        name="MyAgent",
+        description="A helpful assistant"
+    )
+)
+
+# Store a memory
 memory = client.memories.create(
-    content="User prefers dark mode",
-    agent_id="my-agent"
+    MemoryCreate(
+        agent_id=agent.id,
+        content="The user prefers technical explanations",
+        metadata={"category": "preferences"}
+    )
 )
 
 # Search memories
+from memoryrelay import MemorySearchRequest
+
 results = client.memories.search(
-    query="user preferences",
-    limit=5
+    MemorySearchRequest(
+        agent_id=agent.id,
+        query="How does the user like explanations?",
+        limit=5
+    )
 )
 
 for result in results:
-    print(f"Score: {result.score:.3f}")
-    print(f"Content: {result.memory.content}")
+    print(f"Score: {result.similarity}")
+    print(f"Content: {result.memory.content}\n")
 ```
 
-### Async Client
+### Asynchronous Client
 
 ```python
 import asyncio
-from memoryrelay import AsyncMemoryRelay
+from memoryrelay import AsyncMemoryRelay, MemoryCreate, AgentCreate
 
 async def main():
-    async with AsyncMemoryRelay(api_key="mem_your_api_key_here") as client:
-        # Create a memory
+    async with AsyncMemoryRelay(api_key="your-api-key") as client:
+        # Create an agent
+        agent = await client.agents.create(
+            AgentCreate(name="AsyncAgent")
+        )
+        
+        # Store a memory
         memory = await client.memories.create(
-            content="User prefers dark mode",
-            agent_id="my-agent"
+            MemoryCreate(
+                agent_id=agent.id,
+                content="Important information"
+            )
         )
         
-        # Search memories
-        results = await client.memories.search(
-            query="user preferences",
-            limit=5
-        )
-        
-        for result in results:
-            print(f"Score: {result.score:.3f}")
-            print(f"Content: {result.memory.content}")
+        # List memories
+        memories = await client.memories.list(agent_id=agent.id)
+        print(f"Total memories: {memories.total}")
 
 asyncio.run(main())
 ```
 
-### v2 Async API (60-600x Faster)
+## Features
 
-The v2 API returns immediately (202 Accepted) while embedding generation happens in the background.
+✅ **ICM workspaces** - pinned, versioned context: builds, receipts, drafts, Git sources (`client.icm`)  
+✅ **Fully typed** - Complete type hints for better IDE support  
+✅ **Sync & Async** - Choose the client that fits your needs  
+✅ **Pydantic models** - Validated request/response objects  
+✅ **Error handling** - Custom exceptions for different error types  
+✅ **Context managers** - Automatic resource cleanup  
+✅ **Production ready** - Works with https://api.memoryrelay.net
 
-```python
-from memoryrelay import MemoryRelay
+## Authentication
 
-client = MemoryRelay(api_key="mem_your_api_key_here")
+Set your API key via environment variable:
 
-# Strategy 1: Fire-and-forget (fastest, no waiting)
-response = client.memories.create_async(
-    content="User prefers dark mode",
-    agent_id="my-agent"
-)
-print(f"Memory {response.id} queued (job: {response.job_id})")
-# API response in <50ms! Memory will be ready in ~3s
-
-# Strategy 2: Poll until ready (drop-in v1 replacement)
-response = client.memories.create_async(
-    content="User's favorite color is blue",
-    agent_id="my-agent"
-)
-memory = client.memories.wait_for_ready(response.id, timeout=10)
-# Blocks until embedding is generated (still faster than v1!)
-
-# Strategy 3: Create and wait (convenience helper)
-memory = client.memories.create_and_wait(
-    content="User timezone is America/New_York",
-    agent_id="my-agent",
-    timeout=10
-)
-# Same interface as v1, but uses v2 internally (faster!)
+```bash
+export MEMORYRELAY_API_KEY="your-api-key"
 ```
 
-**Performance:**
-- v1 (sync): 2-30s per memory (blocking)
-- v2 (async): <50ms API response + 2-5s background processing
-- **Speedup: 60-600x faster API response time**
-
-See [examples/v2_async_api.py](examples/v2_async_api.py) for detailed examples.
-
-## Usage
-
-### Initialize Client
-
-#### Sync Client
+Or pass it directly:
 
 ```python
-from memoryrelay import MemoryRelay
-
-# Basic initialization
-client = MemoryRelay(api_key="mem_your_api_key_here")
-
-# With custom configuration
-client = MemoryRelay(
-    api_key="mem_your_api_key_here",
-    base_url="https://api.memoryrelay.net",  # Optional
-    timeout=30.0,  # Request timeout in seconds
-    max_retries=3  # Max retries for failed requests
-)
-
-# Or use context manager (recommended)
-with MemoryRelay(api_key="mem_...") as client:
-    # Your code here
-    pass
+client = MemoryRelay(api_key="your-api-key")
 ```
 
-#### Async Client
+## Core Resources
+
+### Memories
 
 ```python
-from memoryrelay import AsyncMemoryRelay
-
-# Basic initialization
-client = AsyncMemoryRelay(api_key="mem_your_api_key_here")
-
-# Use async context manager (recommended)
-async with AsyncMemoryRelay(api_key="mem_...") as client:
-    # Your async code here
-    memory = await client.memories.create(...)
-```
-
-### Create Memories
-
-#### Sync
-
-```python
-# Create a single memory
+# Create
 memory = client.memories.create(
-    content="User completed Python tutorial",
-    agent_id="learning-agent",
-    metadata={"course": "python-101", "completed": True}
+    MemoryCreate(
+        agent_id="agent-123",
+        content="User loves Python",
+        metadata={"source": "conversation"}
+    )
 )
 
-# Batch create (faster for multiple memories)
-response = client.memories.create_batch([
-    {"content": "Memory 1", "agent_id": "agent-1"},
-    {"content": "Memory 2", "agent_id": "agent-1"},
-    {"content": "Memory 3", "agent_id": "agent-1"}
-])
-
-print(f"Created {response.succeeded}/{response.total} memories")
-print(f"Took {response.timing['total_ms']:.0f}ms")
-```
-
-#### Async
-
-```python
-# Create a single memory
-memory = await client.memories.create(
-    content="User completed Python tutorial",
-    agent_id="learning-agent",
-    metadata={"course": "python-101", "completed": True}
-)
-
-# Batch create (faster for multiple memories)
-response = await client.memories.create_batch([
-    {"content": "Memory 1", "agent_id": "agent-1"},
-    {"content": "Memory 2", "agent_id": "agent-1"},
-    {"content": "Memory 3", "agent_id": "agent-1"}
-])
-
-print(f"Created {response.succeeded}/{response.total} memories")
-print(f"Took {response.timing['total_ms']:.0f}ms")
-```
-
-### Search Memories
-
-```python
-# Semantic search
-results = client.memories.search(
-    query="what programming languages does the user know?",
-    agent_id="my-agent",
-    limit=10,
-    min_score=0.7  # Only return results with score >= 0.7
-)
-
-# With metadata filtering
-results = client.memories.search(
-    query="completed courses",
-    metadata_filter={"completed": True}
-)
-```
-
-### Update & Delete
-
-```python
-# Update memory
-updated = client.memories.update(
-    memory_id="mem_abc123",
-    content="Updated content",
-    metadata={"updated": True}
-)
-
-# Delete memory
-client.memories.delete(memory_id="mem_abc123")
-```
-
-### List Memories
-
-```python
-# List all memories for an agent
+# List with filtering
 memories = client.memories.list(
-    agent_id="my-agent",
-    limit=100,
+    agent_id="agent-123",
+    limit=50,
     offset=0
 )
 
-# List with user filter
-memories = client.memories.list(
-    user_id="user_123",
-    limit=50
+# Get by ID
+memory = client.memories.get("memory-id")
+
+# Update
+from memoryrelay import MemoryUpdate
+updated = client.memories.update(
+    "memory-id",
+    MemoryUpdate(content="Updated content")
+)
+
+# Delete
+client.memories.delete("memory-id")
+
+# Semantic search
+from memoryrelay import MemorySearchRequest
+results = client.memories.search(
+    MemorySearchRequest(
+        agent_id="agent-123",
+        query="What does the user like?",
+        limit=10,
+        threshold=0.7
+    )
 )
 ```
 
-### Entity Management
+### Agents
 
 ```python
-# Create entity
+# Create
+agent = client.agents.create(
+    AgentCreate(
+        name="CustomerSupport",
+        description="Handles customer queries",
+        metadata={"team": "support"}
+    )
+)
+
+# List all
+agents = client.agents.list()
+
+# Get by ID
+agent = client.agents.get("agent-id")
+
+# Delete
+client.agents.delete("agent-id")
+```
+
+### Entities
+
+```python
+# Create
 entity = client.entities.create(
-    entity_type="person",
-    name="John Doe"
+    EntityCreate(
+        agent_id="agent-123",
+        name="John Doe",
+        entity_type="person",
+        properties={"email": "john@example.com"}
+    )
 )
 
-# Link entity to memory
-client.entities.link(
-    entity_id=entity.id,
-    memory_id=memory.id
-)
+# List with filtering
+entities = client.entities.list(agent_id="agent-123")
 
-# List entities
-entities = client.entities.list(
-    agent_id="my-agent",
-    entity_type="person"
-)
+# Get by ID
+entity = client.entities.get("entity-id")
+
+# Delete
+client.entities.delete("entity-id")
 ```
 
-### Health Check
+### ICM workspaces
+
+ICM workspaces are pinned, versioned context an agent walks like a folder. The
+`icm` resource covers `/v2/icm`: capabilities, workspaces, releases, context
+builds for any target (a route, a stage, or a repository the workspace includes),
+receipts, the key's root (its repositories and the route bound to each step),
+Git sources and drafts. Against a server without ICM every call raises
+`IcmUnsupportedError`.
 
 ```python
-health = client.health()
-print(f"API Status: {health.status}")
-print(f"Version: {health.version}")
-print(f"Services: {health.services}")
+from memoryrelay import MemoryRelay
+
+client = MemoryRelay(api_key="mem_prod_...")
+
+caps = client.icm.capabilities()          # supported, build_targets, principal
+root = client.icm.root(step="fix")        # the repositories this key can build for
+
+workspaces = client.icm.list_workspaces()
+ws = workspaces[0]["id"]
+
+# Pinned context for a step, within a token budget; the receipt records what was supplied.
+build = client.icm.build_context(ws, target={"kind": "route", "route": "fix"}, token_budget=6000)
+receipt = client.icm.get_receipt(ws, build["receipt_id"])
+
+# Context for one repository the workspace includes.
+build = client.icm.build_context(ws, target={"kind": "repository", "alias": "api", "route": "fix"})
+
+# Drafts: write files, check, propose. A person publishes or merges; the SDK never does.
+client.icm.import_files(ws, {"icm.source.json": source_json, "routes/fix.md": body})
+client.icm.check_draft(ws)
+client.icm.propose_draft(ws, title="Refresh the fix route")
 ```
 
-## Error Handling
+`AsyncMemoryRelay` exposes the same methods as coroutines.
+
+## Exception Handling
 
 ```python
 from memoryrelay import (
-    MemoryRelay,
+    MemoryRelayError,
     AuthenticationError,
-    RateLimitError,
     NotFoundError,
     ValidationError,
     APIError,
+    NetworkError
 )
 
 try:
-    memory = client.memories.create(
-        content="Test memory",
-        agent_id="my-agent"
-    )
+    memory = client.memories.get("invalid-id")
+except NotFoundError as e:
+    print(f"Memory not found: {e.message}")
 except AuthenticationError:
     print("Invalid API key")
-except RateLimitError as e:
-    print(f"Rate limit exceeded. Retry after {e.retry_after}s")
-except NotFoundError:
-    print("Resource not found")
 except ValidationError as e:
-    print(f"Invalid request: {e.message}")
-except APIError as e:
-    print(f"API error: {e.message} (status: {e.status_code})")
+    print(f"Validation error: {e.message}")
+except NetworkError as e:
+    print(f"Network issue: {e.message}")
+except MemoryRelayError as e:
+    print(f"General error: {e.message} (status: {e.status_code})")
 ```
 
-## Examples
+## Advanced Usage
 
-See the [examples/](./examples/) directory for more usage examples:
+### Custom Base URL
 
-- [basic_usage.py](./examples/basic_usage.py) - Sync client CRUD operations
-- [context_manager.py](./examples/context_manager.py) - Using context managers
-- [async_usage.py](./examples/async_usage.py) - Async/await operations
+```python
+client = MemoryRelay(
+    api_key="your-api-key",
+    base_url="https://custom-api.example.com"
+)
+```
+
+### Custom Timeout
+
+```python
+client = MemoryRelay(
+    api_key="your-api-key",
+    timeout=60.0  # 60 seconds
+)
+```
+
+### Custom Headers
+
+```python
+client = MemoryRelay(
+    api_key="your-api-key",
+    headers={"X-Custom-Header": "value"}
+)
+```
+
+### Context Manager (Automatic Cleanup)
+
+```python
+with MemoryRelay(api_key="your-api-key") as client:
+    agent = client.agents.create(AgentCreate(name="Test"))
+    # Client automatically closed when exiting context
+```
+
+## Requirements
+
+- Python 3.10+
+- httpx >= 0.27.0
+- pydantic >= 2.0.0
 
 ## Development
 
-### Setup
-
 ```bash
-git clone https://github.com/memoryrelay/python-sdk.git
-cd python-sdk
-python -m venv venv
-source venv/bin/activate  # or `venv\Scripts\activate` on Windows
+# Install dev dependencies
 pip install -e ".[dev]"
-```
 
-### Testing
-
-```bash
+# Run tests
 pytest
-pytest --cov=memoryrelay  # With coverage
-```
 
-### Code Quality
-
-```bash
-black .
-ruff check .
+# Type checking
 mypy memoryrelay
+
+# Linting
+ruff check memoryrelay
 ```
 
-## API Reference
+## Links
 
-Full API documentation available at [docs.memoryrelay.ai](https://docs.memoryrelay.ai/)
-
-## Support
-
-- **Documentation**: [docs.memoryrelay.ai](https://docs.memoryrelay.ai/)
-- **GitHub Issues**: [github.com/memoryrelay/python-sdk/issues](https://github.com/memoryrelay/python-sdk/issues)
-- **Email**: hello@memoryrelay.ai
+- **Documentation**: https://docs.memoryrelay.ai/
+- **API Reference**: https://docs.memoryrelay.ai/
+- **GitHub**: https://github.com/yourusername/memoryrelay-python
+- **Issues**: https://github.com/yourusername/memoryrelay-python/issues
 
 ## License
 
-MIT License - see [LICENSE](./LICENSE) for details.
+MIT License - see LICENSE file for details.

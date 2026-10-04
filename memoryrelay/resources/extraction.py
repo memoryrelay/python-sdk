@@ -1,65 +1,74 @@
-"""Agent resource management."""
+"""Extraction settings and BYOK management."""
 
 from __future__ import annotations
 
 import httpx
 
 from ..exceptions import APIError, MemoryRelayError, NetworkError, NotFoundError, ValidationError
-from ..models import Agent, AgentCreate, AgentList, AgentUpdate
+from ..models import (
+    ByokKeyCreate,
+    ByokKeyResponse,
+    ExtractionSettings,
+)
 
 
-class AgentsResource:
-    """Synchronous agent operations."""
+class ExtractionResource:
+    """Synchronous extraction settings operations."""
 
     def __init__(self, client: httpx.Client, base_url: str):
         self._client = client
         self._base_url = base_url
 
-    def create(self, agent: AgentCreate) -> Agent:
-        """Create a new agent."""
+    def get_settings(self) -> ExtractionSettings:
+        """Get current extraction settings and BYOK status."""
+        try:
+            response = self._client.get(f"{self._base_url}/v1/extraction/settings")
+            self._handle_errors(response)
+            return ExtractionSettings(**response.json())
+        except httpx.RequestError as e:
+            raise NetworkError(f"Network error: {e}", None) from e
+
+    def create_key(self, key: ByokKeyCreate) -> ByokKeyResponse:
+        """Add a new BYOK extraction key."""
         try:
             response = self._client.post(
-                f"{self._base_url}/v1/agents", json=agent.model_dump(exclude_none=True)
+                f"{self._base_url}/v1/extraction/keys", json=key.model_dump(exclude_none=True)
             )
             self._handle_errors(response)
-            return Agent(**response.json())
+            return ByokKeyResponse(**response.json())
         except httpx.RequestError as e:
             raise NetworkError(f"Network error: {e}", None) from e
 
-    def list(self) -> AgentList:
-        """List all agents."""
+    def activate_key(self, key_id: str) -> ByokKeyResponse:
+        """Activate a BYOK key (deactivates all others)."""
         try:
-            response = self._client.get(f"{self._base_url}/v1/agents")
+            response = self._client.post(f"{self._base_url}/v1/extraction/keys/{key_id}/activate")
             self._handle_errors(response)
-            return AgentList(**response.json())
+            return ByokKeyResponse(**response.json())
         except httpx.RequestError as e:
             raise NetworkError(f"Network error: {e}", None) from e
 
-    def get(self, agent_id: str) -> Agent:
-        """Get a specific agent by ID."""
+    def deactivate_all_keys(self) -> dict:
+        """Deactivate all BYOK keys (use free extraction).
+
+        Non-destructive: keys remain configured and can be re-activated.
+
+        Returns:
+            dict with status, message, and deactivated_count
+        """
         try:
-            response = self._client.get(f"{self._base_url}/v1/agents/{agent_id}")
+            response = self._client.post(f"{self._base_url}/v1/extraction/keys/deactivate-all")
             self._handle_errors(response)
-            return Agent(**response.json())
+            return response.json()
         except httpx.RequestError as e:
             raise NetworkError(f"Network error: {e}", None) from e
 
-    def update(self, agent_id: str, data: AgentUpdate) -> Agent:
-        """Update an agent's name, description, or metadata."""
+    def delete_key(self, key_id: str) -> dict:
+        """Delete a BYOK key."""
         try:
-            response = self._client.put(
-                f"{self._base_url}/v1/agents/{agent_id}", json=data.model_dump(exclude_none=True)
-            )
+            response = self._client.delete(f"{self._base_url}/v1/extraction/keys/{key_id}")
             self._handle_errors(response)
-            return Agent(**response.json())
-        except httpx.RequestError as e:
-            raise NetworkError(f"Network error: {e}", None) from e
-
-    def delete(self, agent_id: str) -> None:
-        """Delete an agent."""
-        try:
-            response = self._client.delete(f"{self._base_url}/v1/agents/{agent_id}")
-            self._handle_errors(response)
+            return response.json()
         except httpx.RequestError as e:
             raise NetworkError(f"Network error: {e}", None) from e
 
@@ -86,58 +95,72 @@ class AgentsResource:
             raise MemoryRelayError(message, status_code)
 
 
-class AsyncAgentsResource:
-    """Asynchronous agent operations."""
+class AsyncExtractionResource:
+    """Asynchronous extraction settings operations."""
 
     def __init__(self, client: httpx.AsyncClient, base_url: str):
         self._client = client
         self._base_url = base_url
 
-    async def create(self, agent: AgentCreate) -> Agent:
-        """Create a new agent."""
+    async def get_settings(self) -> ExtractionSettings:
+        """Get current extraction settings and BYOK status."""
+        try:
+            response = await self._client.get(f"{self._base_url}/v1/extraction/settings")
+            self._handle_errors(response)
+            return ExtractionSettings(**response.json())
+        except httpx.RequestError as e:
+            raise NetworkError(f"Network error: {e}", None) from e
+
+    async def create_key(self, key: ByokKeyCreate) -> ByokKeyResponse:
+        """Add a new BYOK extraction key."""
         try:
             response = await self._client.post(
-                f"{self._base_url}/v1/agents", json=agent.model_dump(exclude_none=True)
+                f"{self._base_url}/v1/extraction/keys", json=key.model_dump(exclude_none=True)
             )
             self._handle_errors(response)
-            return Agent(**response.json())
+            return ByokKeyResponse(**response.json())
         except httpx.RequestError as e:
             raise NetworkError(f"Network error: {e}", None) from e
 
-    async def list(self) -> AgentList:
-        """List all agents."""
+    async def activate_key(self, key_id: str) -> ByokKeyResponse:
+        """Activate a BYOK key (deactivates all others)."""
         try:
-            response = await self._client.get(f"{self._base_url}/v1/agents")
-            self._handle_errors(response)
-            return AgentList(**response.json())
-        except httpx.RequestError as e:
-            raise NetworkError(f"Network error: {e}", None) from e
-
-    async def get(self, agent_id: str) -> Agent:
-        """Get a specific agent by ID."""
-        try:
-            response = await self._client.get(f"{self._base_url}/v1/agents/{agent_id}")
-            self._handle_errors(response)
-            return Agent(**response.json())
-        except httpx.RequestError as e:
-            raise NetworkError(f"Network error: {e}", None) from e
-
-    async def update(self, agent_id: str, data: AgentUpdate) -> Agent:
-        """Update an agent's name, description, or metadata."""
-        try:
-            response = await self._client.put(
-                f"{self._base_url}/v1/agents/{agent_id}", json=data.model_dump(exclude_none=True)
+            response = await self._client.post(
+                f"{self._base_url}/v1/extraction/keys/{key_id}/activate"
             )
             self._handle_errors(response)
-            return Agent(**response.json())
+            return ByokKeyResponse(**response.json())
         except httpx.RequestError as e:
             raise NetworkError(f"Network error: {e}", None) from e
 
-    async def delete(self, agent_id: str) -> None:
-        """Delete an agent."""
+    async def deactivate_all_keys(self) -> dict:
+        """Deactivate all BYOK keys (use free extraction).
+
+        Non-destructive: keys remain configured and can be re-activated.
+
+        Returns:
+            dict with status, message, and deactivated_count
+
+        Example:
+            >>> result = await client.extraction.deactivate_all_keys()
+            >>> print(result["message"])
+            "Deactivated 2 BYOK key(s). Now using free extraction (GLiNER)."
+        """
         try:
-            response = await self._client.delete(f"{self._base_url}/v1/agents/{agent_id}")
+            response = await self._client.post(
+                f"{self._base_url}/v1/extraction/keys/deactivate-all"
+            )
             self._handle_errors(response)
+            return response.json()
+        except httpx.RequestError as e:
+            raise NetworkError(f"Network error: {e}", None) from e
+
+    async def delete_key(self, key_id: str) -> dict:
+        """Delete a BYOK key."""
+        try:
+            response = await self._client.delete(f"{self._base_url}/v1/extraction/keys/{key_id}")
+            self._handle_errors(response)
+            return response.json()
         except httpx.RequestError as e:
             raise NetworkError(f"Network error: {e}", None) from e
 
