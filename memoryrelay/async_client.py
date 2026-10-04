@@ -1,76 +1,50 @@
-"""
-Async MemoryRelay Python SDK - Async Client
+"""Asynchronous MemoryRelay client."""
 
-Async/await version of the MemoryRelay client for use with asyncio.
-"""
+from __future__ import annotations
 
-import asyncio
-import logging
-from typing import Any, Optional, Union, cast
+from typing import Any
 
 import httpx
 
-from memoryrelay.exceptions import (
-    APIError,
-    AuthenticationError,
-    ForbiddenError,
-    NetworkError,
-    NotFoundError,
-    RateLimitError,
-    TimeoutError,
-    ValidationError,
-)
-from memoryrelay.resources.async_agents import AsyncAgentsResource
-from memoryrelay.resources.async_entities import AsyncEntitiesResource
-from memoryrelay.resources.async_memories import AsyncMemoriesResource
-from memoryrelay.types import HealthStatus
-
-logger = logging.getLogger("memoryrelay.async")
+from .exceptions import AuthenticationError
+from .resources.agents import AsyncAgentsResource
+from .resources.entities import AsyncEntitiesResource
+from .resources.extraction import AsyncExtractionResource
+from .resources.icm import AsyncIcmResource
+from .resources.memories import AsyncMemoriesResource
 
 
 class AsyncMemoryRelay:
-    """
-    Async MemoryRelay API Client.
+    """Asynchronous client for the MemoryRelay API.
 
-    Usage:
-        >>> client = AsyncMemoryRelay(api_key="mem_...")
-        >>>
-        >>> # Create a memory
-        >>> memory = await client.memories.create(
-        ...     content="User prefers dark mode",
-        ...     agent_id="my-agent"
-        ... )
-        >>>
-        >>> # Search memories
-        >>> results = await client.memories.search(
-        ...     query="user preferences",
-        ...     limit=5
-        ... )
-        >>>
-        >>> # Batch create
-        >>> response = await client.memories.create_batch([
-        ...     {"content": "Memory 1"},
-        ...     {"content": "Memory 2"}
-        ... ])
+    Example:
+        >>> async with AsyncMemoryRelay(api_key="your-api-key") as client:
+        ...     agent = await client.agents.create(name="MyAgent")
+        ...     memory = await client.memories.create(
+        ...         agent_id=agent.id,
+        ...         content="Important information"
+        ...     )
     """
 
     def __init__(
         self,
-        api_key: Optional[str] = None,
+        api_key: str | None = None,
         base_url: str = "https://api.memoryrelay.net",
         timeout: float = 30.0,
-        max_retries: int = 3,
+        headers: dict[str, str] | None = None,
         **kwargs: Any,
-    ) -> None:
-        """
-        Initialize AsyncMemoryRelay client.
+    ):
+        """Initialize the AsyncMemoryRelay client.
 
         Args:
-            api_key: Your MemoryRelay API key. Can also be set via MEMORYRELAY_API_KEY env var.
-            base_url: API base URL (default: https://api.memoryrelay.net)
+            api_key: API key for authentication. Can also be set via MEMORYRELAY_API_KEY env var.
+            base_url: Base URL for the API (default: https://api.memoryrelay.net)
             timeout: Request timeout in seconds (default: 30.0)
-            max_retries: Maximum number of retries for failed requests (default: 3)
+            headers: Additional headers to include in requests
             **kwargs: Additional arguments passed to httpx.AsyncClient
+
+        Raises:
+            AuthenticationError: If no API key is provided
         """
         if not api_key:
             import os
@@ -79,238 +53,38 @@ class AsyncMemoryRelay:
 
         if not api_key:
             raise AuthenticationError(
-                "API key is required. Provide via api_key parameter or "
-                "MEMORYRELAY_API_KEY environment variable.",
-                status_code=401,
+                "API key is required. Provide via api_key parameter or MEMORYRELAY_API_KEY environment variable."
             )
 
-        self.api_key = api_key
-        self.base_url = base_url.rstrip("/")
-        self.timeout = timeout
-        self.max_retries = max_retries
+        default_headers = {
+            "Authorization": f"Bearer {api_key}",
+            "User-Agent": "memoryrelay-python/0.1.0",
+        }
 
-        logger.debug(
-            f"Initializing AsyncMemoryRelay client: base_url={self.base_url}, "
-            f"timeout={timeout}s, max_retries={max_retries}"
-        )
-
-        # Import version dynamically to avoid circular imports
-        try:
-            from memoryrelay import __version__
-
-            user_agent = f"memoryrelay-python-async/{__version__}"
-        except ImportError:
-            user_agent = "memoryrelay-python-async/0.1.0"
-
-        # Create async HTTP client
-        self._client = httpx.AsyncClient(
-            base_url=self.base_url,
-            timeout=timeout,
-            headers={
-                "X-API-Key": api_key,
-                "User-Agent": user_agent,
-            },
-            **kwargs,
-        )
-
-        # Initialize resource clients
-        self.memories = AsyncMemoriesResource(self)
-        self.entities = AsyncEntitiesResource(self)
-        self.agents = AsyncAgentsResource(self)
-
-    async def health(self) -> HealthStatus:
-        """
-        Check API health status.
-
-        Returns:
-            HealthStatus object with service information
-
-        Example:
-            >>> health = await client.health()
-            >>> print(health.status)  # "healthy"
-            >>> print(health.services)  # {"database": "up", ...}
-        """
-        response = await self._request("GET", "/v1/health")
-        return HealthStatus(**cast(dict[str, Any], response))
-
-    async def _request(
-        self,
-        method: str,
-        path: str,
-        *,
-        json: Optional[dict[str, Any]] = None,
-        params: Optional[dict[str, Any]] = None,
-        headers: Optional[dict[str, str]] = None,
-    ) -> Union[dict[str, Any], list[Any], None]:
-        """
-        Make an async HTTP request to the API.
-
-        Args:
-            method: HTTP method (GET, POST, PUT, DELETE, etc.)
-            path: API endpoint path
-            json: JSON body for request
-            params: Query parameters
-            headers: Additional headers
-
-        Returns:
-            Parsed JSON response (dict, list, or None for 204)
-
-        Raises:
-            AuthenticationError: Invalid API key
-            RateLimitError: Rate limit exceeded
-            NotFoundError: Resource not found
-            ValidationError: Invalid request data
-            APIError: Other API errors
-            NetworkError: Connection/network errors
-            TimeoutError: Request timeout
-        """
-        # Merge headers
-        req_headers = self._client.headers.copy()
         if headers:
-            req_headers.update(headers)
+            default_headers.update(headers)
 
-        # Retry logic with exponential backoff
-        last_exception: Optional[Exception] = None
-        for attempt in range(self.max_retries):
-            try:
-                logger.debug(f"{method} {path} (attempt {attempt + 1}/{self.max_retries})")
+        self._client = httpx.AsyncClient(
+            base_url=base_url, headers=default_headers, timeout=timeout, **kwargs
+        )
 
-                response = await self._client.request(
-                    method=method,
-                    url=path,
-                    json=json,
-                    params=params,
-                    headers=req_headers,
-                )
+        self._base_url = base_url
 
-                logger.debug(
-                    f"Response: {response.status_code} "
-                    f"({response.elapsed.total_seconds():.3f}s)"
-                )
+        # Initialize resource managers
+        self.memories = AsyncMemoriesResource(self._client, base_url)
+        self.agents = AsyncAgentsResource(self._client, base_url)
+        self.entities = AsyncEntitiesResource(self._client, base_url)
+        self.extraction = AsyncExtractionResource(self._client, base_url)
+        self.icm = AsyncIcmResource(self._client, base_url)
 
-                # Handle errors
-                if response.status_code >= 400:
-                    self._handle_error(response)
-
-                # Parse response
-                if response.status_code == 204:
-                    return None
-
-                return cast(Union[dict[str, Any], list[Any]], response.json())
-
-            except httpx.TimeoutException as e:
-                logger.warning(f"Request timeout: {e}")
-                last_exception = TimeoutError(f"Request timeout after {self.timeout}s")
-                if attempt == self.max_retries - 1:
-                    raise last_exception from e
-                # Exponential backoff
-                await asyncio.sleep(2**attempt)
-
-            except httpx.NetworkError as e:
-                logger.warning(f"Network error: {e}")
-                last_exception = NetworkError(f"Network error: {str(e)}")
-                if attempt == self.max_retries - 1:
-                    raise last_exception from e
-                # Exponential backoff
-                await asyncio.sleep(2**attempt)
-
-            except RateLimitError as e:
-                logger.warning(f"Rate limited: {e.message} " f"(retry_after={e.retry_after}s)")
-                # Don't retry on last attempt
-                if attempt == self.max_retries - 1:
-                    raise
-                # Respect Retry-After header
-                wait_time = e.retry_after if e.retry_after else (2**attempt)
-                logger.debug(f"Waiting {wait_time}s before retry...")
-                await asyncio.sleep(wait_time)
-
-            except httpx.HTTPStatusError as e:
-                # Don't retry client errors (4xx) except 429
-                if 400 <= e.response.status_code < 500 and e.response.status_code != 429:
-                    self._handle_error(e.response)
-
-                logger.warning(f"HTTP error: {e.response.status_code}")
-                last_exception = e
-
-                # Don't retry on last attempt
-                if attempt == self.max_retries - 1:
-                    self._handle_error(e.response)
-
-                # Exponential backoff for 5xx errors
-                await asyncio.sleep(2**attempt)
-
-        # Should never reach here, but just in case
-        if last_exception:
-            raise last_exception
-
-        # Fallback (should never happen)
-        raise APIError("Request failed after all retries", status_code=500)
-
-    def _handle_error(self, response: httpx.Response) -> None:
-        """Handle error responses from API."""
-        error_data: Optional[dict[str, Any]] = None
-
-        try:
-            error_data = response.json()
-            # API returns RFC 7807 format with `detail` at the top level
-            error_msg = error_data.get("detail", "Unknown error")
-            request_id = error_data.get("request_id")
-        except Exception:
-            error_msg = response.text or f"HTTP {response.status_code}"
-            request_id = None
-
-        # Map status codes to exceptions
-        if response.status_code == 401:
-            raise AuthenticationError(
-                error_msg,
-                status_code=401,
-                response=error_data,
-                request_id=request_id,
-            )
-        elif response.status_code == 403:
-            raise ForbiddenError(
-                error_msg,
-                status_code=403,
-                response=error_data,
-                request_id=request_id,
-            )
-        elif response.status_code == 404:
-            raise NotFoundError(
-                error_msg,
-                status_code=404,
-                response=error_data,
-                request_id=request_id,
-            )
-        elif response.status_code == 429:
-            retry_after = response.headers.get("Retry-After")
-            raise RateLimitError(
-                error_msg,
-                retry_after=int(retry_after) if retry_after else None,
-                request_id=request_id,
-            )
-        elif response.status_code in (400, 422):
-            raise ValidationError(
-                error_msg,
-                status_code=response.status_code,
-                response=error_data,
-                request_id=request_id,
-            )
-        else:
-            raise APIError(
-                error_msg,
-                status_code=response.status_code,
-                response=error_data,
-                request_id=request_id,
-            )
-
-    async def aclose(self) -> None:
+    async def close(self) -> None:
         """Close the HTTP client."""
         await self._client.aclose()
 
-    async def __aenter__(self) -> "AsyncMemoryRelay":
+    async def __aenter__(self) -> AsyncMemoryRelay:
         """Async context manager entry."""
         return self
 
-    async def __aexit__(self, *args: Any) -> None:
+    async def __aexit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         """Async context manager exit."""
-        await self.aclose()
+        await self.close()

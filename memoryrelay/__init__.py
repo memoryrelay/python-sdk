@@ -1,51 +1,102 @@
-"""
-MemoryRelay Python SDK
+"""MemoryRelay Python SDK - Official client for the MemoryRelay API."""
 
-Official Python client for MemoryRelay API.
-"""
+__version__ = "0.4.0"
 
-__version__ = "0.3.0"
-
-from memoryrelay.async_client import AsyncMemoryRelay
-from memoryrelay.client import MemoryRelay
-from memoryrelay.exceptions import (
+from .async_client import AsyncMemoryRelay
+from .client import MemoryRelay
+from .exceptions import (
     APIError,
     AuthenticationError,
-    ForbiddenError,
+    IcmError,
+    IcmUnsupportedError,
     MemoryRelayError,
+    NetworkError,
     NotFoundError,
     RateLimitError,
-    TimeoutError,
     ValidationError,
 )
-from memoryrelay.types import (
+from .models import (
     Agent,
+    AgentCreate,
+    AgentList,
+    # Agent update
+    AgentUpdate,
+    # Memory batch & context
+    BatchMemoryItem,
+    BatchMemoryRequest,
+    BatchMemoryResponse,
+    BatchMemoryResult,
+    # Extraction models
+    ByokKeyCreate,
+    ByokKeyResponse,
     Entity,
+    EntityCreate,
     EntityInfo,
-    HealthStatus,
+    EntityLinkCreate,
+    EntityLinkResponse,
+    EntityList,
+    EntityUpdate,
+    ExtractionSettings,
     Memory,
+    # V2 API models
     MemoryAsyncResponse,
+    MemoryContextRequest,
+    MemoryContextResponse,
+    MemoryCreate,
+    MemoryList,
+    MemorySearchRequest,
     MemorySearchResult,
     MemoryStatusResponse,
+    MemoryUpdate,
+    SearchResponse,
 )
 
 __all__ = [
-    "Agent",
-    "APIError",
-    "AsyncMemoryRelay",
-    "AuthenticationError",
-    "Entity",
-    "EntityInfo",
-    "ForbiddenError",
-    "HealthStatus",
-    "Memory",
-    "MemoryAsyncResponse",
+    # Clients
     "MemoryRelay",
-    "MemoryRelayError",
+    "AsyncMemoryRelay",
+    # Models
+    "Memory",
+    "MemoryCreate",
+    "MemoryUpdate",
+    "MemorySearchRequest",
     "MemorySearchResult",
+    "MemoryList",
+    "SearchResponse",
+    "EntityInfo",
+    "Agent",
+    "AgentCreate",
+    "AgentList",
+    "Entity",
+    "EntityCreate",
+    "EntityUpdate",
+    "EntityList",
+    "EntityLinkCreate",
+    "EntityLinkResponse",
+    # V2 API models
+    "MemoryAsyncResponse",
     "MemoryStatusResponse",
+    # Extraction models
+    "ByokKeyCreate",
+    "ByokKeyResponse",
+    "ExtractionSettings",
+    # Agent update
+    "AgentUpdate",
+    # Memory batch & context
+    "BatchMemoryItem",
+    "BatchMemoryRequest",
+    "BatchMemoryResult",
+    "BatchMemoryResponse",
+    "MemoryContextRequest",
+    "MemoryContextResponse",
+    # Exceptions
+    "MemoryRelayError",
+    "AuthenticationError",
     "NotFoundError",
-    "RateLimitError",
-    "TimeoutError",
     "ValidationError",
+    "RateLimitError",
+    "APIError",
+    "NetworkError",
+    "IcmError",
+    "IcmUnsupportedError",
 ]
