@@ -1,0 +1,14 @@
+{
+  "standard": "1.1.0",
+  "repository": "memoryrelay/python-sdk",
+  "project": "python-sdk",
+  "entry": "AGENTS.md",
+  "pointer": "CLAUDE.md",
+  "review_days": 90,
+  "sub_entries": [],
+  "instruction_files": [],
+  "documents_index": "_shared/documents.md",
+  "decisions": [],
+  "document_id_prefix": "doc-",
+  "forms": "umbrella"
+}

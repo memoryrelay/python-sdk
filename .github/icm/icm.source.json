@@ -1,0 +1,940 @@
+{
+  "workspace_root": "",
+  "schema_version": 2,
+  "access": "workspace",
+  "entrypoint": "AGENTS.md",
+  "runtimes": [
+    "claude_code",
+    "codex_cli"
+  ],
+  "projects": [
+    "python-sdk"
+  ],
+  "nodes": [
+    {
+      "id": "AGENTS.md",
+      "revision": 1,
+      "kind": "route",
+      "layer": "L0",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        "AGENTS.md"
+      ]
+    },
+    {
+      "id": "CLAUDE.md",
+      "revision": 1,
+      "kind": "route",
+      "layer": "L0",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        "CLAUDE.md"
+      ]
+    },
+    {
+      "id": "doc-QUICKSTART.md",
+      "revision": 1,
+      "kind": "fact",
+      "layer": "L3",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        "QUICKSTART.md"
+      ]
+    },
+    {
+      "id": "doc-README.md",
+      "revision": 1,
+      "kind": "fact",
+      "layer": "L3",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        "README.md"
+      ]
+    },
+    {
+      "id": "doc-RELEASE.md",
+      "revision": 1,
+      "kind": "fact",
+      "layer": "L3",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        "RELEASE.md"
+      ]
+    },
+    {
+      "id": "01-fix-CLAUDE.md",
+      "revision": 1,
+      "kind": "route",
+      "layer": "L1",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/01-fix/CLAUDE.md"
+      ]
+    },
+    {
+      "id": "01-fix-CONTEXT.md",
+      "revision": 1,
+      "kind": "route",
+      "layer": "L1",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/01-fix/CONTEXT.md"
+      ]
+    },
+    {
+      "id": "01-fix-stages-01_reproduce-CONTEXT.md",
+      "revision": 1,
+      "kind": "stage",
+      "layer": "L2",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/01-fix/stages/01_reproduce/CONTEXT.md"
+      ]
+    },
+    {
+      "id": "01-fix-stages-02_fix-CONTEXT.md",
+      "revision": 1,
+      "kind": "stage",
+      "layer": "L2",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/01-fix/stages/02_fix/CONTEXT.md"
+      ]
+    },
+    {
+      "id": "01-fix-stages-03_verify-CONTEXT.md",
+      "revision": 1,
+      "kind": "stage",
+      "layer": "L2",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/01-fix/stages/03_verify/CONTEXT.md"
+      ]
+    },
+    {
+      "id": "02-align-CLAUDE.md",
+      "revision": 1,
+      "kind": "route",
+      "layer": "L1",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/02-align/CLAUDE.md"
+      ]
+    },
+    {
+      "id": "02-align-CONTEXT.md",
+      "revision": 1,
+      "kind": "route",
+      "layer": "L1",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/02-align/CONTEXT.md"
+      ]
+    },
+    {
+      "id": "02-align-stages-01_compare-CONTEXT.md",
+      "revision": 1,
+      "kind": "stage",
+      "layer": "L2",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/02-align/stages/01_compare/CONTEXT.md"
+      ]
+    },
+    {
+      "id": "02-align-stages-02_port-CONTEXT.md",
+      "revision": 1,
+      "kind": "stage",
+      "layer": "L2",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/02-align/stages/02_port/CONTEXT.md"
+      ]
+    },
+    {
+      "id": "02-align-stages-03_verify-CONTEXT.md",
+      "revision": 1,
+      "kind": "stage",
+      "layer": "L2",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/02-align/stages/03_verify/CONTEXT.md"
+      ]
+    },
+    {
+      "id": "03-release-CLAUDE.md",
+      "revision": 1,
+      "kind": "route",
+      "layer": "L1",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/03-release/CLAUDE.md"
+      ]
+    },
+    {
+      "id": "03-release-CONTEXT.md",
+      "revision": 1,
+      "kind": "route",
+      "layer": "L1",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/03-release/CONTEXT.md"
+      ]
+    },
+    {
+      "id": "03-release-stages-01_plan-CONTEXT.md",
+      "revision": 1,
+      "kind": "stage",
+      "layer": "L2",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/03-release/stages/01_plan/CONTEXT.md"
+      ]
+    },
+    {
+      "id": "03-release-stages-02_prepare-CONTEXT.md",
+      "revision": 1,
+      "kind": "stage",
+      "layer": "L2",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/03-release/stages/02_prepare/CONTEXT.md"
+      ]
+    },
+    {
+      "id": "03-release-stages-03_publish-CONTEXT.md",
+      "revision": 1,
+      "kind": "stage",
+      "layer": "L2",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/03-release/stages/03_publish/CONTEXT.md"
+      ]
+    },
+    {
+      "id": "shared-CONTEXT.md",
+      "revision": 1,
+      "kind": "route",
+      "layer": "L1",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/_shared/CONTEXT.md"
+      ]
+    },
+    {
+      "id": "shared-architecture.md",
+      "revision": 1,
+      "kind": "fact",
+      "layer": "L3",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/_shared/architecture.md"
+      ],
+      "evidence": [
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/__init__.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/async_client.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/client.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/exceptions.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/integrations/langchain.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/integrations/llamaindex.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/models.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/resources/agents.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/resources/entities.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/resources/extraction.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/resources/icm.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/resources/memories.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "pyproject.toml",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        }
+      ]
+    },
+    {
+      "id": "shared-build-and-test.md",
+      "revision": 1,
+      "kind": "fact",
+      "layer": "L3",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/_shared/build-and-test.md"
+      ],
+      "evidence": [
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": ".github/workflows/ci-cd.yml",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": ".github/workflows/icm-check.yml",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "pyproject.toml",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "tests/test_icm_sources.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "tests/test_integration.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "tests/test_memories_v2_sync.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        }
+      ]
+    },
+    {
+      "id": "shared-conventions.md",
+      "revision": 1,
+      "kind": "fact",
+      "layer": "L3",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/_shared/conventions.md"
+      ],
+      "evidence": [
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": ".github/workflows/ci-cd.yml",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "README.md",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/__init__.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/client.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/exceptions.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/resources/icm.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/resources/memories.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "pyproject.toml",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "release.sh",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        }
+      ]
+    },
+    {
+      "id": "shared-documents.md",
+      "revision": 1,
+      "kind": "fact",
+      "layer": "L3",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/_shared/documents.md"
+      ],
+      "evidence": [
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": ".github/workflows/ci-cd.yml",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "LICENSE",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "QUICKSTART.md",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "README.md",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "RELEASE.md",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "examples/basic_usage.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "examples/v2_async_and_byok.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/client.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "pyproject.toml",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "release.sh",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "tests/test_integration.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        }
+      ]
+    },
+    {
+      "id": "shared-gotchas.md",
+      "revision": 1,
+      "kind": "fact",
+      "layer": "L3",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/_shared/gotchas.md"
+      ],
+      "evidence": [
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": ".github/workflows/ci-cd.yml",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/async_client.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/client.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/resources/icm.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/resources/memories.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "release.sh",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "tests/test_integration.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        }
+      ]
+    },
+    {
+      "id": "shared-release.md",
+      "revision": 1,
+      "kind": "fact",
+      "layer": "L3",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/_shared/release.md"
+      ],
+      "evidence": [
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": ".github/workflows/ci-cd.yml",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "RELEASE.md",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "memoryrelay/__init__.py",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "pyproject.toml",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "release.sh",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        }
+      ]
+    },
+    {
+      "id": "shared-upstream.md",
+      "revision": 1,
+      "kind": "fact",
+      "layer": "L3",
+      "state": "accepted",
+      "project_id": "python-sdk",
+      "verified_at": "2026-10-14",
+      "review_after": "2027-01-12",
+      "files": [
+        ".github/icm/_shared/upstream.md"
+      ],
+      "evidence": [
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": ".github/workflows/ci-cd.yml",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "QUICKSTART.md",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "README.md",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "RELEASE.md",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        },
+        {
+          "repo": "memoryrelay/python-sdk",
+          "path": "pyproject.toml",
+          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+        }
+      ]
+    }
+  ],
+  "forms": [
+    {
+      "form": "umbrella",
+      "root": "",
+      "pipelines": [
+        ".github/icm/01-fix",
+        ".github/icm/02-align",
+        ".github/icm/03-release"
+      ],
+      "unit": "run"
+    },
+    {
+      "form": "pipeline",
+      "root": ".github/icm/01-fix",
+      "unit": "run"
+    },
+    {
+      "form": "pipeline",
+      "root": ".github/icm/02-align",
+      "unit": "run"
+    },
+    {
+      "form": "pipeline",
+      "root": ".github/icm/03-release",
+      "unit": "run"
+    }
+  ],
+  "stages": {
+    "fix-reproduce": {
+      "order": 1,
+      "contract": ".github/icm/01-fix/stages/01_reproduce/CONTEXT.md",
+      "inputs": {
+        "working": [],
+        "reference": [
+          ".github/icm/_shared/architecture.md",
+          ".github/icm/_shared/build-and-test.md",
+          ".github/icm/_shared/gotchas.md"
+        ]
+      },
+      "do_not_load": [
+        ".github/icm/02-align/",
+        ".github/icm/03-release/",
+        ".github/icm/_shared/release.md"
+      ],
+      "outputs": [
+        ".github/icm/01-fix/stages/01_reproduce/output/reproduction.md"
+      ],
+      "human_check": "A person runs the test, or reads the alert or the log, and confirms it fails for the reported reason and not a neighbouring one.",
+      "required": [
+        "01-fix-stages-01_reproduce-CONTEXT.md"
+      ],
+      "optional": [
+        "shared-upstream.md"
+      ]
+    },
+    "fix-fix": {
+      "order": 2,
+      "contract": ".github/icm/01-fix/stages/02_fix/CONTEXT.md",
+      "inputs": {
+        "working": [
+          ".github/icm/01-fix/stages/01_reproduce/output/reproduction.md"
+        ],
+        "reference": [
+          ".github/icm/_shared/conventions.md",
+          ".github/icm/_shared/gotchas.md"
+        ]
+      },
+      "do_not_load": [
+        ".github/icm/02-align/",
+        ".github/icm/03-release/",
+        ".github/icm/_shared/release.md"
+      ],
+      "outputs": [
+        ".github/icm/01-fix/stages/02_fix/output/change.md"
+      ],
+      "human_check": "A person reads the diff beside the reproduction: it removes the cause, the async twin and every copy moved with it, the public surface is unchanged; and decides from `change.md` whether memoryrelay/api needs the same fix.",
+      "required": [
+        "01-fix-stages-02_fix-CONTEXT.md"
+      ],
+      "optional": [
+        "shared-upstream.md"
+      ]
+    },
+    "fix-verify": {
+      "order": 3,
+      "contract": ".github/icm/01-fix/stages/03_verify/CONTEXT.md",
+      "inputs": {
+        "working": [
+          ".github/icm/01-fix/stages/02_fix/output/change.md"
+        ],
+        "reference": [
+          ".github/icm/_shared/build-and-test.md",
+          ".github/icm/_shared/conventions.md"
+        ]
+      },
+      "do_not_load": [
+        ".github/icm/02-align/",
+        ".github/icm/03-release/",
+        ".github/icm/_shared/architecture.md"
+      ],
+      "outputs": [
+        ".github/icm/01-fix/stages/03_verify/output/pull-request.md"
+      ],
+      "human_check": "A reviewer reads `pull-request.md` and the CI results, then merges or not; nothing reaches PyPI until a person starts a release.",
+      "required": [
+        "01-fix-stages-03_verify-CONTEXT.md"
+      ],
+      "optional": [
+        "shared-release.md"
+      ]
+    },
+    "align-compare": {
+      "order": 1,
+      "contract": ".github/icm/02-align/stages/01_compare/CONTEXT.md",
+      "inputs": {
+        "working": [],
+        "reference": [
+          ".github/icm/_shared/upstream.md",
+          ".github/icm/_shared/architecture.md"
+        ]
+      },
+      "do_not_load": [
+        ".github/icm/01-fix/",
+        ".github/icm/03-release/",
+        ".github/icm/_shared/release.md"
+      ],
+      "outputs": [
+        ".github/icm/02-align/stages/01_compare/output/alignment.md"
+      ],
+      "human_check": "A person approves the list of differences to port, and decides what happens to each change that exists only here.",
+      "required": [
+        "02-align-stages-01_compare-CONTEXT.md"
+      ],
+      "optional": [
+        "shared-build-and-test.md"
+      ]
+    },
+    "align-port": {
+      "order": 2,
+      "contract": ".github/icm/02-align/stages/02_port/CONTEXT.md",
+      "inputs": {
+        "working": [
+          ".github/icm/02-align/stages/01_compare/output/alignment.md"
+        ],
+        "reference": [
+          ".github/icm/_shared/conventions.md",
+          ".github/icm/_shared/build-and-test.md",
+          ".github/icm/_shared/gotchas.md"
+        ]
+      },
+      "do_not_load": [
+        ".github/icm/01-fix/",
+        ".github/icm/03-release/",
+        ".github/icm/_shared/release.md"
+      ],
+      "outputs": [
+        ".github/icm/02-align/stages/02_port/output/change.md"
+      ],
+      "human_check": "A person reads the diff against `alignment.md`: only the approved differences moved, the final comparison shows only the agreed exceptions, and the checks are green.",
+      "required": [
+        "02-align-stages-02_port-CONTEXT.md"
+      ]
+    },
+    "align-verify": {
+      "order": 3,
+      "contract": ".github/icm/02-align/stages/03_verify/CONTEXT.md",
+      "inputs": {
+        "working": [
+          ".github/icm/02-align/stages/02_port/output/change.md"
+        ],
+        "reference": [
+          ".github/icm/_shared/build-and-test.md",
+          ".github/icm/_shared/conventions.md"
+        ]
+      },
+      "do_not_load": [
+        ".github/icm/01-fix/",
+        ".github/icm/03-release/",
+        ".github/icm/_shared/architecture.md"
+      ],
+      "outputs": [
+        ".github/icm/02-align/stages/03_verify/output/pull-request.md"
+      ],
+      "human_check": "A reviewer reads `pull-request.md` and the CI results, then merges or not; nothing reaches PyPI until a person starts a release.",
+      "required": [
+        "02-align-stages-03_verify-CONTEXT.md"
+      ],
+      "optional": [
+        "shared-release.md"
+      ]
+    },
+    "release-plan": {
+      "order": 1,
+      "contract": ".github/icm/03-release/stages/01_plan/CONTEXT.md",
+      "inputs": {
+        "working": [],
+        "reference": [
+          ".github/icm/_shared/release.md",
+          ".github/icm/_shared/upstream.md"
+        ]
+      },
+      "do_not_load": [
+        ".github/icm/01-fix/",
+        ".github/icm/02-align/",
+        ".github/icm/_shared/architecture.md"
+      ],
+      "outputs": [
+        ".github/icm/03-release/stages/01_plan/output/plan.md"
+      ],
+      "human_check": "A person approves the version number.",
+      "required": [
+        "03-release-stages-01_plan-CONTEXT.md"
+      ]
+    },
+    "release-prepare": {
+      "order": 2,
+      "contract": ".github/icm/03-release/stages/02_prepare/CONTEXT.md",
+      "inputs": {
+        "working": [
+          ".github/icm/03-release/stages/01_plan/output/plan.md"
+        ],
+        "reference": [
+          ".github/icm/_shared/release.md",
+          ".github/icm/_shared/build-and-test.md"
+        ]
+      },
+      "do_not_load": [
+        ".github/icm/01-fix/",
+        ".github/icm/02-align/",
+        ".github/icm/_shared/architecture.md"
+      ],
+      "outputs": [
+        ".github/icm/03-release/stages/02_prepare/output/release-pr.md"
+      ],
+      "human_check": "A reviewer reads the diff (the two version lines, nothing else) and the CI result, then merges.",
+      "required": [
+        "03-release-stages-02_prepare-CONTEXT.md"
+      ]
+    },
+    "release-publish": {
+      "order": 3,
+      "contract": ".github/icm/03-release/stages/03_publish/CONTEXT.md",
+      "inputs": {
+        "working": [
+          ".github/icm/03-release/stages/02_prepare/output/release-pr.md"
+        ],
+        "reference": [
+          ".github/icm/_shared/release.md"
+        ]
+      },
+      "do_not_load": [
+        ".github/icm/01-fix/",
+        ".github/icm/02-align/",
+        ".github/icm/_shared/architecture.md"
+      ],
+      "outputs": [
+        ".github/icm/03-release/stages/03_publish/output/published.md"
+      ],
+      "human_check": "A person has seen version X on PyPI and the GitHub release with both files.",
+      "required": [
+        "03-release-stages-03_publish-CONTEXT.md"
+      ],
+      "optional": [
+        "shared-build-and-test.md"
+      ]
+    }
+  }
+}

@@ -64,10 +64,14 @@ ignore_missing_imports = true
 [tool.black]
 line-length = 100
 target-version = ["py310", "py311", "py312"]
+# Vendored unchanged from memoryrelay/api (app/icm/standard/); linted there.
+extend-exclude = '^/\.github/icm/_system/generate\.py$'
 
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+# Vendored unchanged from memoryrelay/api (app/icm/standard/); linted there.
+extend-exclude = [".github/icm/_system/generate.py"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP"]
