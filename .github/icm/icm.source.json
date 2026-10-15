@@ -286,13 +286,13 @@
     },
     {
       "id": "shared-architecture.md",
-      "revision": 1,
+      "revision": 2,
       "kind": "fact",
       "layer": "L3",
       "state": "accepted",
       "project_id": "python-sdk",
-      "verified_at": "2026-10-14",
-      "review_after": "2027-01-12",
+      "verified_at": "2026-10-15",
+      "review_after": "2027-01-13",
       "files": [
         ".github/icm/_shared/architecture.md"
       ],
@@ -300,79 +300,79 @@
         {
           "repo": "memoryrelay/python-sdk",
           "path": "memoryrelay/__init__.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "memoryrelay/async_client.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "memoryrelay/client.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "memoryrelay/exceptions.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "memoryrelay/integrations/langchain.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "memoryrelay/integrations/llamaindex.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "memoryrelay/models.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "memoryrelay/resources/agents.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "memoryrelay/resources/entities.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "memoryrelay/resources/extraction.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "memoryrelay/resources/icm.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "memoryrelay/resources/memories.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "pyproject.toml",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         }
       ]
     },
     {
       "id": "shared-build-and-test.md",
-      "revision": 1,
+      "revision": 2,
       "kind": "fact",
       "layer": "L3",
       "state": "accepted",
       "project_id": "python-sdk",
-      "verified_at": "2026-10-14",
-      "review_after": "2027-01-12",
+      "verified_at": "2026-10-15",
+      "review_after": "2027-01-13",
       "files": [
         ".github/icm/_shared/build-and-test.md"
       ],
@@ -380,32 +380,32 @@
         {
           "repo": "memoryrelay/python-sdk",
           "path": ".github/workflows/ci-cd.yml",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": ".github/workflows/icm-check.yml",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "pyproject.toml",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "tests/test_icm_sources.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "tests/test_integration.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "tests/test_memories_v2_sync.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         }
       ]
     },
@@ -471,13 +471,13 @@
     },
     {
       "id": "shared-documents.md",
-      "revision": 1,
+      "revision": 2,
       "kind": "fact",
       "layer": "L3",
       "state": "accepted",
       "project_id": "python-sdk",
-      "verified_at": "2026-10-14",
-      "review_after": "2027-01-12",
+      "verified_at": "2026-10-15",
+      "review_after": "2027-01-13",
       "files": [
         ".github/icm/_shared/documents.md"
       ],
@@ -485,69 +485,64 @@
         {
           "repo": "memoryrelay/python-sdk",
           "path": ".github/workflows/ci-cd.yml",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "LICENSE",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "QUICKSTART.md",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "README.md",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "RELEASE.md",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "examples/basic_usage.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "examples/v2_async_and_byok.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "memoryrelay/client.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "pyproject.toml",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "release.sh",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
-        },
-        {
-          "repo": "memoryrelay/python-sdk",
-          "path": "tests/test_integration.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         }
       ]
     },
     {
       "id": "shared-gotchas.md",
-      "revision": 1,
+      "revision": 2,
       "kind": "fact",
       "layer": "L3",
       "state": "accepted",
       "project_id": "python-sdk",
-      "verified_at": "2026-10-14",
-      "review_after": "2027-01-12",
+      "verified_at": "2026-10-15",
+      "review_after": "2027-01-13",
       "files": [
         ".github/icm/_shared/gotchas.md"
       ],
@@ -555,37 +550,37 @@
         {
           "repo": "memoryrelay/python-sdk",
           "path": ".github/workflows/ci-cd.yml",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "memoryrelay/async_client.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "memoryrelay/client.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "memoryrelay/resources/icm.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "memoryrelay/resources/memories.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "release.sh",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         },
         {
           "repo": "memoryrelay/python-sdk",
           "path": "tests/test_integration.py",
-          "commit": "33feede6e95571a80cd8d0e53fe46cf68a51c5d0"
+          "commit": "b398f4ade5053147138b820135d12fdaf215ad2f"
         }
       ]
     },
