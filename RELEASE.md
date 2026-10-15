@@ -17,55 +17,31 @@ You need to set this up once on PyPI.org:
 
 3. **Save** - PyPI will now trust releases from this GitHub Action
 
-## Step 2: Initial Release
+This setting is in force: every `memoryrelay` version on PyPI (0.1.0, 0.1.1, 0.3.0, 0.4.0) was uploaded by `ci-cd.yml` from this repository on a `v*` tag. Renaming or splitting `ci-cd.yml` stops publishing until the publisher above is updated on PyPI.
 
-Once PyPI trusted publishing is configured, run:
+## Step 2: Release a version
 
-```bash
-cd /home/ubuntu/.openclaw/workspace/memoryrelay-python-sdk
-./release.sh patch
-```
+1. **Bump the version.** It is written twice, `pyproject.toml` and `memoryrelay/__init__.py`, and they must agree. From a clean checkout:
 
-This will:
-- Create git tag `v0.1.0`
-- Push tag to GitHub
-- GitHub Actions will automatically:
-  - Run tests
-  - Build package
-  - Publish to PyPI
-  - Create GitHub release
+   ```bash
+   ./release.sh patch   # or minor, major
+   ```
 
-## Alternative: Manual First Release
+   The script bumps both files, commits `chore: bump version to X.Y.Z` and creates the annotated tag `vX.Y.Z` locally. It pushes nothing, refuses a dirty tree, and uses GNU `sed -i` (it fails on macOS).
 
-If you want to do the first release manually (to create the PyPI project):
+2. **Get the bump onto `main` with CI green.** If it goes through a pull request, the local tag points at the branch commit, not at `main`: delete it (`git tag -d vX.Y.Z`) and tag the merge commit instead (`git tag -a vX.Y.Z -m "Release vX.Y.Z" <merge-sha>`).
 
-```bash
-cd /home/ubuntu/.openclaw/workspace/memoryrelay-python-sdk
+3. **Push the tag.** `git push origin vX.Y.Z`. A `v*` tag publishes whatever commit it points at, so tag only a commit on `main`. The `CI/CD` workflow then:
+   - runs the test matrix,
+   - builds the wheel and sdist,
+   - publishes to PyPI by trusted publishing (`skip-existing: true`: a version PyPI already holds is silently skipped),
+   - creates the GitHub release with generated notes and both files.
 
-# Install build tools
-pip install build twine
-
-# Build package
-python -m build
-
-# Upload to PyPI (you'll need API token)
-twine upload dist/*
-```
-
-After manual first release, trusted publishing will work automatically.
+PyPI never accepts the same version twice: a mistake is fixed by a new patch version, never by moving a tag. Do not upload with `twine` by hand; the trusted publisher is the only uploader.
 
 ## Verification
 
 After release:
-- Check PyPI: https://pypi.org/project/memoryrelay/
+- Check PyPI: https://pypi.org/project/memoryrelay/ (or `https://pypi.org/pypi/memoryrelay/json`)
 - Check GitHub releases: https://github.com/memoryrelay/python-sdk/releases
-- Test install: `pip install memoryrelay`
-
-## Current Status
-
-- ✅ GitHub Actions workflow configured
-- ✅ PyPI trusted publishing permissions in workflow
-- ✅ Package metadata complete
-- ✅ Tests passing (37/37)
-- ⏳ PyPI trusted publishing setup (manual step required)
-- ⏳ Release tag creation (ready to go)
+- Test install: `pip install memoryrelay==X.Y.Z` in a clean environment, then `python -c "import memoryrelay; print(memoryrelay.__version__)"`
