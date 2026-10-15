@@ -43,7 +43,17 @@ def _raise_for(response: httpx.Response) -> None:
     )
 
 
-TARGET_KINDS = ("entry", "route", "stage", "record", "notes", "nodes", "impact", "repository")
+TARGET_KINDS = (
+    "entry",
+    "route",
+    "stage",
+    "package",
+    "record",
+    "notes",
+    "nodes",
+    "impact",
+    "repository",
+)
 
 
 def _build_body(
@@ -148,8 +158,47 @@ def _proposal_body(expected_digest: str, title: str | None, body: str | None) ->
     return out
 
 
+def _search_params(
+    query: str, workspace_ids: list[str] | None, release_id: str | None, limit: int
+) -> list[tuple[str, str]]:
+    params = [("q", query), ("limit", str(limit))]
+    params += [("workspace_id", w) for w in workspace_ids or []]
+    if release_id is not None:
+        params.append(("release_id", release_id))
+    return params
+
+
 def _if_match(revision: int | None) -> dict[str, str]:
     return {} if revision is None else {"If-Match": f'"{revision}"'}
+
+
+OUTCOME_RESULTS = ("success", "partial", "failed", "abandoned")
+
+
+def _observation(
+    kind: str, payload: dict[str, Any], event_id: str | None, method: str
+) -> dict[str, Any]:
+    import uuid
+    from datetime import datetime, timezone
+
+    return {
+        "event_id": event_id or str(uuid.uuid4()),
+        "kind": kind,
+        "method": method,
+        "payload": payload,
+        "observed_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+
+def _outcome(result: str, note: str | None, evidence: str | None) -> dict[str, Any]:
+    if result not in OUTCOME_RESULTS:
+        raise ValueError(f"result must be one of {OUTCOME_RESULTS}")
+    payload: dict[str, Any] = {"result": result}
+    if note:
+        payload["note"] = note
+    if evidence:
+        payload["evidence"] = evidence
+    return payload
 
 
 class IcmResource:
@@ -187,6 +236,21 @@ class IcmResource:
     def list_workspaces(self) -> list[dict[str, Any]]:
         self._require()
         return cast(list[dict[str, Any]], self._call("GET", "/workspaces")["workspaces"])
+
+    def search(
+        self,
+        query: str,
+        *,
+        workspace_ids: list[str] | None = None,
+        release_id: str | None = None,
+        limit: int = 10,
+    ) -> dict[str, Any]:
+        """Ranked sections of release files matching ``query``: the live release of
+        every readable workspace, or ``workspace_ids``; ``release_id`` with one."""
+        self._require()
+        return self._call(
+            "GET", "/search", params=_search_params(query, workspace_ids, release_id, limit)
+        )
 
     def get_release(self, workspace_id: str, release_id: str) -> dict[str, Any]:
         self._require()
@@ -237,6 +301,45 @@ class IcmResource:
     def get_receipt(self, workspace_id: str, receipt_id: str) -> dict[str, Any]:
         self._require()
         return self._call("GET", f"/workspaces/{workspace_id}/receipts/{receipt_id}")
+
+    def add_observation(
+        self,
+        workspace_id: str,
+        receipt_id: str,
+        *,
+        kind: str,
+        payload: dict[str, Any],
+        event_id: str | None = None,
+        method: str = "self_report",
+    ) -> dict[str, Any]:
+        """Append an observation to a receipt (``icm:observe``): ``read`` or
+        ``materialized`` with ``{"paths": [...]}``, ``outcome`` with
+        ``{"result": ..., "note"?, "evidence"?}``. The server decides provenance."""
+        self._require()
+        return self._call(
+            "POST",
+            f"/workspaces/{workspace_id}/receipts/{receipt_id}/observations",
+            json=_observation(kind, payload, event_id, method),
+        )
+
+    def report_outcome(
+        self,
+        workspace_id: str,
+        receipt_id: str,
+        result: str,
+        *,
+        note: str | None = None,
+        evidence: str | None = None,
+        event_id: str | None = None,
+    ) -> dict[str, Any]:
+        """What the task came to: ``success``, ``partial``, ``failed`` or ``abandoned``."""
+        return self.add_observation(
+            workspace_id,
+            receipt_id,
+            kind="outcome",
+            payload=_outcome(result, note, evidence),
+            event_id=event_id,
+        )
 
     def get_run(self, workspace_id: str, run_id: str) -> dict[str, Any]:
         """A run's per-stage status; ``approval_stale`` means edited after approval."""
@@ -368,6 +471,21 @@ class AsyncIcmResource:
         await self._require()
         return cast(list[dict[str, Any]], (await self._call("GET", "/workspaces"))["workspaces"])
 
+    async def search(
+        self,
+        query: str,
+        *,
+        workspace_ids: list[str] | None = None,
+        release_id: str | None = None,
+        limit: int = 10,
+    ) -> dict[str, Any]:
+        """Ranked sections of release files matching ``query``: the live release of
+        every readable workspace, or ``workspace_ids``; ``release_id`` with one."""
+        await self._require()
+        return await self._call(
+            "GET", "/search", params=_search_params(query, workspace_ids, release_id, limit)
+        )
+
     async def get_release(self, workspace_id: str, release_id: str) -> dict[str, Any]:
         await self._require()
         return await self._call("GET", f"/workspaces/{workspace_id}/releases/{release_id}")
@@ -417,6 +535,43 @@ class AsyncIcmResource:
     async def get_receipt(self, workspace_id: str, receipt_id: str) -> dict[str, Any]:
         await self._require()
         return await self._call("GET", f"/workspaces/{workspace_id}/receipts/{receipt_id}")
+
+    async def add_observation(
+        self,
+        workspace_id: str,
+        receipt_id: str,
+        *,
+        kind: str,
+        payload: dict[str, Any],
+        event_id: str | None = None,
+        method: str = "self_report",
+    ) -> dict[str, Any]:
+        """Append an observation to a receipt (``icm:observe``); see the sync client."""
+        await self._require()
+        return await self._call(
+            "POST",
+            f"/workspaces/{workspace_id}/receipts/{receipt_id}/observations",
+            json=_observation(kind, payload, event_id, method),
+        )
+
+    async def report_outcome(
+        self,
+        workspace_id: str,
+        receipt_id: str,
+        result: str,
+        *,
+        note: str | None = None,
+        evidence: str | None = None,
+        event_id: str | None = None,
+    ) -> dict[str, Any]:
+        """What the task came to: ``success``, ``partial``, ``failed`` or ``abandoned``."""
+        return await self.add_observation(
+            workspace_id,
+            receipt_id,
+            kind="outcome",
+            payload=_outcome(result, note, evidence),
+            event_id=event_id,
+        )
 
     async def get_run(self, workspace_id: str, run_id: str) -> dict[str, Any]:
         """A run's per-stage status; ``approval_stale`` means edited after approval."""
