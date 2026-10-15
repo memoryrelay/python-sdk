@@ -8,7 +8,7 @@ is not set.
 All resources created during tests are cleaned up afterward.
 
 Usage:
-    MEMORYRELAY_API_KEY=mem_prod_xxx pytest sdk/python/tests/test_integration.py -v
+    MEMORYRELAY_API_KEY=mem_prod_xxx pytest tests/test_integration.py -v
 """
 
 import os

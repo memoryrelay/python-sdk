@@ -111,5 +111,7 @@ except ValidationError as e:
 - `client.memories` - Memory CRUD + search
 - `client.agents` - Agent management
 - `client.entities` - Entity tracking
+- `client.extraction` - Extraction settings and BYOK keys
+- `client.icm` - ICM workspaces (`/v2/icm`): builds, receipts, search, drafts, Git sources
 
 See README.md for complete documentation.

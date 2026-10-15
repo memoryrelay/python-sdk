@@ -1,6 +1,6 @@
 ---
-verified_at: 2026-10-14
-verified_commit: 33feede6e95571a80cd8d0e53fe46cf68a51c5d0
+verified_at: 2026-10-15
+verified_commit: b398f4ade5053147138b820135d12fdaf215ad2f
 ---
 
 # Documents — every document of this repository, and who owns its facts
@@ -21,10 +21,6 @@ Each is a `fact` node in the workspace; a stage names one when it needs it.
 
 ## Known drift
 
-- `README.md:317-322` ("Links") points at `github.com/yourusername/memoryrelay-python`; the repository is `memoryrelay/python-sdk` (`pyproject.toml:53-54`).
-- `README.md:301-315` ("Development") lints with `ruff check memoryrelay` and omits black; CI runs `ruff check .` and `black --check .` ([build-and-test.md](build-and-test.md)).
-- `QUICKSTART.md:110-113` lists three resources; the clients also carry `extraction` and `icm` (`memoryrelay/client.py:74-78`).
-- `RELEASE.md` predates the first release: "Step 2" says the script creates `v0.1.0`, both command blocks start with `cd` into a folder on the author's machine, and "Current Status" (37 tests, trusted publishing pending) is superseded by four published versions and PyPI's provenance for 0.4.0 ([upstream.md](upstream.md)). The publisher settings in "Step 1" are still the ones in force.
-- `tests/test_integration.py:11` names memoryrelay/api's path ([gotchas.md](gotchas.md)).
+None known. The five items found at onboarding (README links and development commands, QUICKSTART's resource list, RELEASE.md's pre-0.1.0 steps, the live-test usage path) were corrected on 2026-10-15.
 
 A new document goes in one of the lists above when it is added.

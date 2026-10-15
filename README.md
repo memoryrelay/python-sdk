@@ -304,22 +304,24 @@ with MemoryRelay(api_key="your-api-key") as client:
 # Install dev dependencies
 pip install -e ".[dev]"
 
-# Run tests
-pytest
+# Linting and formatting (what CI runs)
+ruff check .
+black --check .
 
 # Type checking
 mypy memoryrelay
 
-# Linting
-ruff check memoryrelay
+# Run tests (the live tests in tests/test_integration.py run only when
+# MEMORYRELAY_API_KEY is set; unset it unless you mean to hit the API)
+pytest --cov=memoryrelay
 ```
 
 ## Links
 
 - **Documentation**: https://docs.memoryrelay.ai/
 - **API Reference**: https://docs.memoryrelay.ai/
-- **GitHub**: https://github.com/yourusername/memoryrelay-python
-- **Issues**: https://github.com/yourusername/memoryrelay-python/issues
+- **GitHub**: https://github.com/memoryrelay/python-sdk
+- **Issues**: https://github.com/memoryrelay/python-sdk/issues
 
 ## License
 
